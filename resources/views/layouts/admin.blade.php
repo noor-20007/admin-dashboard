@@ -27,7 +27,95 @@
         body {
             font-family: 'Cairo', sans-serif;
         }
+        
+        /* Premium Small Box Styling */
+        .small-box {
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            position: relative;
+            color: #fff !important;
+        }
+        
+        .small-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+
+        .small-box .inner {
+            padding: 20px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .small-box h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            white-space: nowrap;
+        }
+
+        .small-box p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .small-box .icon {
+            color: rgba(0,0,0,0.15);
+            z-index: 0;
+            position: absolute;
+            right: 15px;
+            top: 10px;
+            transition: all 0.3s linear;
+        }
+
+        .small-box .icon > i {
+            font-size: 80px; /* Larger icon */
+        }
+
+        .small-box:hover .icon {
+            transform: scale(1.1);
+        }
+
+        /* Gradient Backgrounds */
+        .bg-info {
+            background: linear-gradient(45deg, #17a2b8, #36b9cc) !important;
+        }
+        .bg-success {
+            background: linear-gradient(45deg, #28a745, #1cc88a) !important;
+        }
+        .bg-warning {
+            background: linear-gradient(45deg, #ffc107, #f6c23e) !important;
+            color: #fff !important; /* Force white text for better contrast on gradient */
+        }
+        .bg-danger {
+            background: linear-gradient(45deg, #dc3545, #e74a3b) !important;
+        }
+        .bg-primary {
+            background: linear-gradient(45deg, #007bff, #4e73df) !important;
+        }
+        .bg-purple {
+            background: linear-gradient(45deg, #6f42c1, #5a5c69) !important; /* Custom purple gradient */
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: none;
+        }
+        
+        .card-header {
+            background-color: transparent;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .btn {
+            border-radius: 8px;
+        }
     </style>
+
 
     @stack('styles')
 </head>
@@ -109,7 +197,7 @@
                                 <p>أعمالنا</p>
                             </a>
                         </li>
-                         <li class="nav-item">
+                        <li class="nav-item">
                             <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-journal-text"></i>
                                 <p>المقالات</p>
@@ -119,15 +207,28 @@
                         <li class="nav-header">الإدارة</li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.members.index') }}" class="nav-link {{ request()->routeIs('admin.members.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-people"></i>
-                                <p>أعضاء الفريق</p>
+                            <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-person-lines-fill"></i>
+                                <p>العملاء</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-collection"></i>
+                                <p>المجموعات</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person-badge"></i>
                                 <p>المستخدمين</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-cash-coin"></i>
+                                <p>الحسابات</p>
                             </a>
                         </li>
 

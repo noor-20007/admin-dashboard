@@ -2,6 +2,7 @@
 
 return [
     'all' => 'All',
+    'created_successfully' => 'Created successfully',
     'read_more' => 'Read More',
     'load_more' => 'Load More',
     'full_name' => 'Full Name',

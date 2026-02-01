@@ -37,6 +37,13 @@ app()->setLocale($currentLang);
         
         /* Except top-banner which needs to be full width */
         #top-banner img { width: 100% !important; }
+        
+        /* Force slider main images to cover the area */
+        #page-slider ul li > img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+        }
     </style>
 
 </head>
@@ -120,8 +127,8 @@ app()->setLocale($currentLang);
 </div>
 <style>
 @keyframes ticker {
-    0% { transform: translate3d(0, 0, 0); }
-    100% { transform: translate3d(-100%, 0, 0); }
+    0% { transform: translate3d(-100%, 0, 0); }
+    100% { transform: translate3d(0, 0, 0); }
 }
 </style>
 @endif
@@ -138,7 +145,7 @@ app()->setLocale($currentLang);
                 <li data-transition="fade" data-slotamount="7" data-masterspeed="1500" >
 
                     <!-- MAIN IMAGE -->
-                    <img src="{{ asset($slide->image) }}"  alt="{{ $slide->title }}"  data-bgfit="scroll" data-bgposition="top center" data-bgrepeat="no-repeat">
+                    <img src="{{ asset($slide->image) }}"  alt="{{ $slide->title }}"  data-bgfit="cover" data-bgposition="top center" data-bgrepeat="no-repeat">
 
                     <!-- LAYER NR. 1 -->
                     @if($slide->title)
@@ -165,7 +172,7 @@ app()->setLocale($currentLang);
                          data-easing="Back.easeInOut"
                          data-endspeed="300"
                          style="color:#fff;font-family:HelveticaNeueLTW20;">
-                         <img src="{{ asset($slide->foreground_image) }}" alt="">
+                         <img src="{{ asset($slide->foreground_image) }}" alt="" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                     </div>
                     @endif
                 </li>

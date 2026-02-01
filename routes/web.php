@@ -214,6 +214,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Posts Routes
     Route::resource('posts', App\Http\Controllers\Admin\PostController::class)->except(['show']);
 
+    // Accounts Routes
+    Route::resource('accounts', App\Http\Controllers\Admin\AccountController::class);
+
+    // Groups Routes
+    Route::resource('groups', App\Http\Controllers\Admin\GroupController::class);
+
+    // Clients Routes
+    Route::resource('clients', App\Http\Controllers\Admin\ClientController::class);
+
     // Members Routes
     Route::resource('members', App\Http\Controllers\Admin\MemberController::class)->except(['show']);
 

@@ -2,6 +2,7 @@
 
 return [
     'all' => 'الكل',
+    'created_successfully' => 'تم الإنشاء بنجاح',
     'read_more' => 'قراءة المزيد',
     'load_more' => 'اظهر المزيد من المقالات',
     'full_name' => 'الاسم الكامل',
