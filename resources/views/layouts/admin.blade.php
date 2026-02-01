@@ -170,10 +170,15 @@
                                 <p>الرئيسية</p>
                             </a>
                         </li>
-                             <li class="nav-item">
                             <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-gear"></i>
                                 <p>الإعدادات</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.currencies.index') }}" class="nav-link {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-currency-exchange"></i>
+                                <p>العملات</p>
                             </a>
                         </li>
 

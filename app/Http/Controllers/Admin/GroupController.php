@@ -15,7 +15,8 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::with('supervisor')->latest()->get();
-        return view('admin.groups.index', compact('groups'));
+        $users = User::all();
+        return view('admin.groups.index', compact('groups', 'users'));
     }
 
     /**

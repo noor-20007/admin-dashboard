@@ -12,7 +12,8 @@ class PortfolioController extends Controller
     public function index()
     {
         $portfolios = Portfolio::with('category')->get();
-        return view('admin.portfolios.index', compact('portfolios'));
+        $categories = Category::all();
+        return view('admin.portfolios.index', compact('portfolios', 'categories'));
     }
 
     public function create()

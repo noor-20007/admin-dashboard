@@ -237,4 +237,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // Timelines Routes
     Route::resource('timelines', App\Http\Controllers\Admin\TimelineController::class)->except(['show']);
+
+    // Currencies Routes
+    Route::resource('currencies', App\Http\Controllers\Admin\CurrencyController::class)->except(['show']);
 });

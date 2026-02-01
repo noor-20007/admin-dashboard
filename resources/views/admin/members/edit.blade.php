@@ -83,6 +83,13 @@
         <div class="card-footer">
             <button type="submit" class="btn btn-primary">تحديث</button>
             <a href="{{ route('admin.members.index') }}" class="btn btn-default float-end">إلغاء</a>
+            <form action="{{ route('admin.members.destroy', $member->id) }}" method="POST" style="display: inline-block; margin-right: 10px;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">
+                    <i class="bi bi-trash"></i> حذف
+                </button>
+            </form>
         </div>
     </form>
 </div>

@@ -58,7 +58,15 @@ class AccountController extends Controller
             'count' => Account::count(),
         ];
 
-        return view('admin.accounts.index', compact('accounts', 'groups', 'stats'));
+        $clients = \App\Models\Client::all();
+        
+        // Calculate pending balance for each client name
+        $clientBalances = Account::where('status', 'Pending')
+            ->selectRaw('name, SUM(amount) as balance')
+            ->groupBy('name')
+            ->pluck('balance', 'name');
+
+        return view('admin.accounts.index', compact('accounts', 'groups', 'stats', 'clients', 'clientBalances'));
     }
 
     /**
@@ -67,7 +75,16 @@ class AccountController extends Controller
     public function create()
     {
         $groups = Group::all();
-        return view('admin.accounts.create', compact('groups'));
+        $clients = \App\Models\Client::all();
+        
+        // Calculate pending balance for each client name
+        // We use the client name as the key because the accounts table currently stores 'name' string
+        $clientBalances = Account::where('status', 'Pending')
+            ->selectRaw('name, SUM(amount) as balance')
+            ->groupBy('name')
+            ->pluck('balance', 'name');
+
+        return view('admin.accounts.create', compact('groups', 'clients', 'clientBalances'));
     }
 
     /**

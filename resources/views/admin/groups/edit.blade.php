@@ -35,6 +35,12 @@
 
             <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
             <a href="{{ route('admin.groups.index') }}" class="btn btn-secondary">إلغاء</a>
+
+            <form action="{{ route('admin.groups.destroy', $group->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> حذف</button>
+            </form>
         </form>
     </div>
 </div>
