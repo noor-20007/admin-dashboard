@@ -71,7 +71,7 @@
         }
 
         .small-box .icon > i {
-            font-size: 80px; /* Larger icon */
+            font-size: 80px;
         }
 
         .small-box:hover .icon {
@@ -87,7 +87,7 @@
         }
         .bg-warning {
             background: linear-gradient(45deg, #ffc107, #f6c23e) !important;
-            color: #fff !important; /* Force white text for better contrast on gradient */
+            color: #fff !important;
         }
         .bg-danger {
             background: linear-gradient(45deg, #dc3545, #e74a3b) !important;
@@ -96,7 +96,7 @@
             background: linear-gradient(45deg, #007bff, #4e73df) !important;
         }
         .bg-purple {
-            background: linear-gradient(45deg, #6f42c1, #5a5c69) !important; /* Custom purple gradient */
+            background: linear-gradient(45deg, #6f42c1, #5a5c69) !important;
         }
         
         .card {
@@ -111,11 +111,116 @@
             padding: 1.2rem 1.5rem;
         }
         
+        /* Simple Sidebar Styling */
+        .app-sidebar {
+            background: #2c3e50 !important;
+            box-shadow: 1px 0 8px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-brand {
+            background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding: 20px 15px;
+        }
+        
+        .brand-link {
+            color: #fff !important;
+            text-decoration: none;
+        }
+        
+        .brand-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        /* Hide scrollbar completely */
+        .sidebar-wrapper {
+            overflow-y: auto !important;
+            height: calc(100vh - 70px);
+        }
+        
+        .sidebar-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar-wrapper::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.5);
+        }
+        
+        /* Simple Menu Headers */
+        .sidebar-menu .nav-header {
+            background: rgba(52, 152, 219, 0.7);
+            color: white;
+            padding: 8px 15px;
+            margin: 10px 8px 5px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        
+        .sidebar-menu .nav-item {
+            margin: 2px 0;
+        }
+        
+        .sidebar-menu .nav-link {
+            border-radius: 6px;
+            margin: 0 8px;
+            transition: all 0.2s ease;
+            color: rgba(255,255,255,0.8) !important;
+        }
+        
+        .sidebar-menu .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff !important;
+        }
+        
+        .sidebar-menu .nav-link.active {
+            background: rgba(39, 174, 96, 0.8);
+            color: #fff !important;
+        }
+        
+        .sidebar-menu .nav-icon {
+            width: 30px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu .nav-link p {
+            margin: 0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        /* Sub-menu items */
+        .sidebar-menu .nav-item.sub-item .nav-link {
+            background: rgba(255,255,255,0.03);
+            margin-right: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-menu .nav-item.sub-item .nav-link:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .sidebar-menu .nav-item.sub-item .nav-link.active {
+            background: rgba(231, 76, 60, 0.7);
+        }
+        
         .btn {
             border-radius: 8px;
         }
     </style>
-
 
     @stack('styles')
 </head>
@@ -162,108 +267,122 @@
             </div>
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
-                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="navigation" data-accordion="false">
+                    <ul class="nav sidebar-menu flex-column" role="navigation">
                         
+                        <!-- الرئيسية -->
                         <li class="nav-item">
                             <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-speedometer"></i>
+                                <i class="nav-icon bi bi-speedometer2"></i>
                                 <p>الرئيسية</p>
                             </a>
                         </li>
-                            <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-gear"></i>
-                                <p>الإعدادات</p>
+
+                        <!-- الإدارة -->
+                        <li class="nav-header">⚡ الإدارة</li>
+                        
+                        <li class="nav-item sub-item">
+                            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-people-fill"></i>
+                                <p>المستخدمون</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
+                            <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-collection-fill"></i>
+                                <p>المجموعات</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item sub-item">
+                            <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-person-vcard-fill"></i>
+                                <p>العملاء</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item sub-item">
+                            <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-wallet2"></i>
+                                <p>الحسابات</p>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.currencies.index') }}" class="nav-link {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-currency-exchange"></i>
+                                <i class="nav-icon bi bi-cash-stack"></i>
                                 <p>العملات</p>
                             </a>
                         </li>
 
-                        <li class="nav-header">المحتوى</li>
-
-                        <li class="nav-item">
+                        <!-- المحتوى -->
+                        <li class="nav-header">📝 المحتوى</li>
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.slides.index') }}" class="nav-link {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-images"></i>
-                                <p>الشرائح (السلايدر)</p>
+                                <i class="nav-icon bi bi-image-fill"></i>
+                                <p>الشرائح</p>
                             </a>
                         </li>
-                         <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-gear-wide-connected"></i>
+                                <i class="nav-icon bi bi-tools"></i>
                                 <p>الخدمات</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-briefcase"></i>
+                                <i class="nav-icon bi bi-briefcase-fill"></i>
                                 <p>أعمالنا</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-journal-text"></i>
+                                <i class="nav-icon bi bi-file-text-fill"></i>
                                 <p>المقالات</p>
                             </a>
                         </li>
-
-                        <li class="nav-header">الإدارة</li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-person-lines-fill"></i>
-                                <p>العملاء</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-collection"></i>
-                                <p>المجموعات</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-person-badge"></i>
-                                <p>المستخدمين</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-cash-coin"></i>
-                                <p>الحسابات</p>
-                            </a>
-                        </li>
-
-                        <li class="nav-header">النظام</li>
                         
-                        <li class="nav-item">
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-tags"></i>
+                                <i class="nav-icon bi bi-bookmark-star-fill"></i>
                                 <p>الأقسام</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.skills.index') }}" class="nav-link {{ request()->routeIs('admin.skills.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-lightning"></i>
+                                <i class="nav-icon bi bi-star-fill"></i>
                                 <p>المهارات</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        
+                        <li class="nav-item sub-item">
                             <a href="{{ route('admin.timelines.index') }}" class="nav-link {{ request()->routeIs('admin.timelines.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-calendar-event"></i>
+                                <i class="nav-icon bi bi-clock-history"></i>
                                 <p>التايم لاين</p>
                             </a>
                         </li>
+
+                        <!-- الإعدادات -->
+                        <li class="nav-header">⚙️ النظام</li>
+                        
                         <li class="nav-item">
-                            <a href="{{ url('/') }}" class="nav-link" target="_blank">
-                                <i class="nav-icon bi bi-globe"></i>
-                                <p>الموقع </p>
+                            <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-sliders"></i>
+                                <p>الإعدادات</p>
                             </a>
                         </li>
-                   
+                        
+                        <li class="nav-item">
+                            <a href="{{ url('/') }}" class="nav-link" target="_blank">
+                                <i class="nav-icon bi bi-box-arrow-up-left"></i>
+                                <p>زيارة الموقع</p>
+                            </a>
+                        </li>
 
                     </ul>
                 </nav>
@@ -312,34 +431,10 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
     <script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
     
-    <script>
-        const SELECTOR_SIDEBAR_WRAPPER = ".sidebar-wrapper";
-        const Default = {
-            scrollbarTheme: "os-theme-light",
-            scrollbarAutoHide: "leave",
-            scrollbarClickScroll: true,
-        };
-        document.addEventListener("DOMContentLoaded", function() {
-            const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-            if (
-                sidebarWrapper &&
-                typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== "undefined"
-            ) {
-                OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-                    scrollbars: {
-                        theme: Default.scrollbarTheme,
-                        autoHide: Default.scrollbarAutoHide,
-                        clickScroll: Default.scrollbarClickScroll,
-                    },
-                });
-            }
-        });
-    </script>
     @stack('scripts')
 </body>
 </html>

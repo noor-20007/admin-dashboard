@@ -50,57 +50,97 @@
     </div>
 </div>
 
-<div class="card card-outline card-secondary mb-3">
-    <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-filter"></i> تصفية البحث</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
+<!-- Simple Filter Bar -->
+<div class="row mb-3">
+    <div class="col-md-3">
+        <select name="search" class="form-select" id="accountSearch">
+            <option value="">اختر حساب...</option>
+            @if(isset($accounts))
+                @foreach($accounts as $account)
+                    <option value="{{ $account->name }}" {{ request('search') == $account->name ? 'selected' : '' }}>
+                        {{ $account->name }}
+                        @if($account->voucher_number)
+                            ({{ $account->voucher_number }})
+                        @endif
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="group_id" class="form-select" id="groupFilter">
+            <option value="">المجموعات</option>
+            @foreach($groups as $group)
+                <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-2">
+        <select name="status" class="form-select" id="statusFilter">
+            <option value="">الحالة</option>
+            <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
+            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+            <option value="Canceled" {{ request('status') == 'Canceled' ? 'selected' : '' }}>Canceled</option>
+        </select>
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="date_from" class="form-control" id="dateFrom" placeholder="من تاريخ" value="{{ request('date_from') }}">
+    </div>
+    <div class="col-md-2">
+        <input type="date" name="date_to" class="form-control" id="dateTo" placeholder="إلى تاريخ" value="{{ request('date_to') }}">
+    </div>
+    <div class="col-md-1">
+        <div class="btn-group w-100" role="group">
+            <button type="submit" class="btn btn-primary" id="searchBtn">
+                <i class="fas fa-search"></i>
             </button>
+            <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+                <i class="fas fa-times"></i>
+            </a>
         </div>
     </div>
-    <div class="card-body">
-        <form action="{{ route('admin.accounts.index') }}" method="GET">
-            <div class="row">
-                <div class="col-md-3 mb-2">
-                    <input type="text" name="search" class="form-control" placeholder="بحث بالاسم أو رقم السند..." value="{{ request('search') }}">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <select name="group_id" class="form-control">
-                        <option value="">جميع المجموعات</option>
-                        @foreach($groups as $group)
-                            <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3 mb-2">
-                    <select name="status" class="form-control">
-                        <option value="">كل الحالات</option>
-                        <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
-                        <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="Canceled" {{ request('status') == 'Canceled' ? 'selected' : '' }}>Canceled</option>
-                    </select>
-                </div>
-                 <div class="col-md-3 mb-2">
-                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> بحث</button>
-                </div>
-            </div>
-             <div class="row">
-                <div class="col-md-3 mb-2">
-                    <label>من تاريخ:</label>
-                    <input type="date" name="date_from" class="form-control" value="{{ request('date_from') }}">
-                </div>
-                <div class="col-md-3 mb-2">
-                    <label>إلى تاريخ:</label>
-                    <input type="date" name="date_to" class="form-control" value="{{ request('date_to') }}">
-                </div>
-                <div class="col-md-3 mb-2 d-flex align-items-end">
-                    <a href="{{ route('admin.accounts.index') }}" class="btn btn-secondary w-100">إلغاء الفلتر</a>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all filter elements
+    const accountSearch = document.getElementById('accountSearch');
+    const groupFilter = document.getElementById('groupFilter');
+    const statusFilter = document.getElementById('statusFilter');
+    const dateFrom = document.getElementById('dateFrom');
+    const dateTo = document.getElementById('dateTo');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    // Function to build URL and redirect
+    function applyFilters() {
+        const params = new URLSearchParams();
+        
+        // Add all filter values
+        if (accountSearch.value) params.append('search', accountSearch.value);
+        if (groupFilter.value) params.append('group_id', groupFilter.value);
+        if (statusFilter.value) params.append('status', statusFilter.value);
+        if (dateFrom.value) params.append('date_from', dateFrom.value);
+        if (dateTo.value) params.append('date_to', dateTo.value);
+        
+        // Redirect to new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+    
+    // Add event listeners for immediate filtering
+    accountSearch.addEventListener('change', applyFilters);
+    groupFilter.addEventListener('change', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+    dateFrom.addEventListener('change', applyFilters);
+    dateTo.addEventListener('change', applyFilters);
+    
+    // Keep button functionality for manual search
+    searchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        applyFilters();
+    });
+});
+</script>
 
 <div class="card card-primary card-outline">
     <div class="card-header">

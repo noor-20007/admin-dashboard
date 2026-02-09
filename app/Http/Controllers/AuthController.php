@@ -19,7 +19,10 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
+        $user = \App\Models\User::where('email', $credentials['email'])->first();
+
+        if ($user && $user->password === $credentials['password']) {
+            Auth::login($user);
             $request->session()->regenerate();
 
             return redirect()->intended('admin');

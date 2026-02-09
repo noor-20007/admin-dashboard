@@ -50,44 +50,85 @@
     </div>
 </div>
 
-<div class="card card-outline card-secondary mb-3">
-    <div class="card-header">
-        <h3 class="card-title"><i class="fas fa-filter"></i> تصفية البحث</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
+<!-- Simple Filter Bar -->
+<div class="row mb-3">
+    <div class="col-md-3">
+        <select name="search" class="form-select" id="clientSearch">
+            <option value="">اختر عميلاً...</option>
+            @if(isset($clients))
+                @foreach($clients as $client)
+                    <option value="{{ $client->name }}" {{ request('search') == $client->name ? 'selected' : '' }}>
+                        {{ $client->name }}
+                        @if($client->phone)
+                            ({{ $client->phone }})
+                        @endif
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="group_id" class="form-select" id="groupFilter">
+            <option value="">جميع المجموعات</option>
+            @foreach($groups as $group)
+                <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select name="gender" class="form-select" id="genderFilter">
+            <option value="">الكل (الجنس)</option>
+            <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>ذكر</option>
+            <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>أنثى</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <div class="btn-group w-100" role="group">
+            <button type="submit" class="btn btn-primary" id="searchBtn">
+                <i class="fas fa-search"></i> بحث
             </button>
+            <a href="{{ route('admin.clients.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+                <i class="fas fa-times"></i>
+            </a>
         </div>
     </div>
-    <div class="card-body">
-        <form action="{{ route('admin.clients.index') }}" method="GET">
-            <div class="row">
-                <div class="col-md-3">
-                    <input type="text" name="search" class="form-control" placeholder="بحث بالاسم أو الهاتف..." value="{{ request('search') }}">
-                </div>
-                <div class="col-md-3">
-                    <select name="group_id" class="form-control">
-                        <option value="">جميع المجموعات</option>
-                        @foreach($groups as $group)
-                            <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <select name="gender" class="form-control">
-                        <option value="">الكل (الجنس)</option>
-                        <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>ذكر</option>
-                        <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>أنثى</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> بحث</button>
-                    <a href="{{ route('admin.clients.index') }}" class="btn btn-secondary">إلغاء</a>
-                </div>
-            </div>
-        </form>
-    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all filter elements
+    const clientSearch = document.getElementById('clientSearch');
+    const groupFilter = document.getElementById('groupFilter');
+    const genderFilter = document.getElementById('genderFilter');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    // Function to build URL and redirect
+    function applyFilters() {
+        const params = new URLSearchParams();
+        
+        // Add all filter values
+        if (clientSearch.value) params.append('search', clientSearch.value);
+        if (groupFilter.value) params.append('group_id', groupFilter.value);
+        if (genderFilter.value) params.append('gender', genderFilter.value);
+        
+        // Redirect to new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+    
+    // Add event listeners for immediate filtering
+    clientSearch.addEventListener('change', applyFilters);
+    groupFilter.addEventListener('change', applyFilters);
+    genderFilter.addEventListener('change', applyFilters);
+    
+    // Keep button functionality for manual search
+    searchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        applyFilters();
+    });
+});
+</script>
+
 
 <div class="card card-primary card-outline">
     <div class="card-header">

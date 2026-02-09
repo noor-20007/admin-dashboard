@@ -3,6 +3,107 @@
 @section('title', 'إدارة المجموعات')
 
 @section('content')
+<!-- Simple Filter Bar -->
+<div class="row mb-3">
+    <div class="col-md-4">
+        <select name="search" class="form-select" id="groupSearch">
+            <option value="">اختر مجموعة...</option>
+            @if(isset($groups))
+                @foreach($groups as $group)
+                    <option value="{{ $group->name }}" {{ request('search') == $group->name ? 'selected' : '' }}>
+                        {{ $group->name }}
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="col-md-4">
+        <select name="supervisor_id" class="form-select" id="supervisorFilter">
+            <option value="">كل المشرفين</option>
+            @php
+                $supervisorsList = collect($groups)->whereNotNull('supervisor')->pluck('supervisor')->unique('id');
+            @endphp
+            @if($supervisorsList->count() > 0)
+                @foreach($supervisorsList as $supervisor)
+                    <option value="{{ $supervisor->id }}" {{ request('supervisor_id') == $supervisor->id ? 'selected' : '' }}>
+                        {{ $supervisor->name }}
+                    </option>
+                @endforeach
+            @endif
+        </select>
+    </div>
+    <div class="col-md-4">
+        <div class="btn-group w-100" role="group">
+            <button type="submit" class="btn btn-primary" id="searchBtn">
+                <i class="fas fa-search"></i> بحث
+            </button>
+            <a href="{{ route('admin.groups.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+                <i class="fas fa-times"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all filter elements
+    const groupSearch = document.getElementById('groupSearch');
+    const supervisorFilter = document.getElementById('supervisorFilter');
+    const searchBtn = document.getElementById('searchBtn');
+    
+    // Function to build URL and redirect
+    function applyFilters() {
+        const params = new URLSearchParams();
+        
+        // Add all filter values
+        if (groupSearch.value) params.append('search', groupSearch.value);
+        if (supervisorFilter.value) params.append('supervisor_id', supervisorFilter.value);
+        
+        // Redirect to new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+    
+    // Function to apply group filter only
+    function applyGroupFilter() {
+        const params = new URLSearchParams();
+        
+        // Add current supervisor filter if exists
+        if (supervisorFilter.value) params.append('supervisor_id', supervisorFilter.value);
+        // Add new group filter
+        if (groupSearch.value) params.append('search', groupSearch.value);
+        
+        // Redirect to new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+    
+    // Function to apply supervisor filter only
+    function applySupervisorFilter() {
+        const params = new URLSearchParams();
+        
+        // Add current group filter if exists
+        if (groupSearch.value) params.append('search', groupSearch.value);
+        // Add new supervisor filter
+        if (supervisorFilter.value) params.append('supervisor_id', supervisorFilter.value);
+        
+        // Redirect to new URL
+        const newUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = newUrl;
+    }
+    
+    // Add event listeners for immediate filtering
+    groupSearch.addEventListener('change', applyGroupFilter);
+    supervisorFilter.addEventListener('change', applySupervisorFilter);
+    
+    // Keep button functionality for manual search
+    searchBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        applyFilters();
+    });
+});
+</script>
+
 <div class="card card-primary card-outline">
     <div class="card-header">
         <h3 class="card-title">قائمة المجموعات</h3>
