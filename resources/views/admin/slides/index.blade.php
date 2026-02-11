@@ -7,9 +7,48 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.slides') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.slides.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.slide') }}</h5>
+            <form action="{{ route('admin.slides.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.title_ar') }}</label>
+                            <input type="text" name="title_ar" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.title_en') }}</label>
+                            <input type="text" name="title_en" class="form-control">
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.background_image') }} <span class="text-danger">*</span></label>
+                    <input type="file" name="image" class="form-control" required>
+                </div>
+    
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.foreground_image') }}</label>
+                    <input type="file" name="foreground_image" class="form-control">
+                </div>
+    
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.sort_order') }}</label>
+                    <input type="number" name="sort_order" class="form-control" value="0">
+                </div>
+    
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

@@ -108,9 +108,38 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.groups') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.groups.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="fas fa-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.group') }}</h5>
+            <form action="{{ route('admin.groups.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.group_name') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.description') }}</label>
+                    <textarea name="description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.supervisor') }}</label>
+                    <select name="supervisor_id" class="form-control">
+                        <option value="">-- {{ __('messages.select') }} {{ __('messages.supervisor') }} --</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body table-responsive">

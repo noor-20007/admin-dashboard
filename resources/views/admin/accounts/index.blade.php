@@ -146,9 +146,73 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.accounts') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.accounts.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="fas fa-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.account') }}</h5>
+            <form action="{{ route('admin.accounts.store') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('messages.name') }} <span class="text-danger">*</span></label>
+                        <select name="name" class="form-control select2" required>
+                            <option value="">{{ __('messages.select_client') }}</option>
+                            @foreach($clients as $client)
+                                <option value="{{ $client->name }}">{{ $client->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('messages.group') }}</label>
+                        <select name="group_id" class="form-control">
+                            <option value="">{{ __('messages.select') }}</option>
+                            @foreach($groups as $group)
+                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.date') }}</label>
+                        <input type="date" name="date" class="form-control" value="{{ date('Y-m-d') }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.amount') }}</label>
+                        <input type="number" step="0.01" name="amount" class="form-control" value="0">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.reference_number') }}</label>
+                        <input type="text" name="reference_number" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('messages.status') }}</label>
+                        <select name="status" class="form-control">
+                            <option value="Pending">{{ __('messages.pending') }} (Pending)</option>
+                            <option value="Paid">{{ __('messages.paid') }} (Paid)</option>
+                            <option value="Canceled">{{ __('messages.canceled') }} (Canceled)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.notes') }}</label>
+                    <textarea name="notes" class="form-control" rows="3"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body table-responsive">

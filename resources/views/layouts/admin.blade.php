@@ -290,7 +290,7 @@
             </div>
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
-                    <ul class="nav sidebar-menu flex-column" role="navigation">
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu" data-accordion="true">
                         
                         <!-- الرئيسية -->
                         <li class="nav-item">
@@ -301,105 +301,123 @@
                         </li>
 
                         <!-- الإدارة -->
-                        <li class="nav-header">⚡ {{ __('messages.management') }}</li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-people-fill"></i>
-                                <p>{{ __('messages.users') }}</p>
+                        <li class="nav-item {{ request()->routeIs(['admin.users.*', 'admin.groups.*', 'admin.clients.*', 'admin.accounts.*', 'admin.currencies.*']) ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs(['admin.users.*', 'admin.groups.*', 'admin.clients.*', 'admin.accounts.*', 'admin.currencies.*']) ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-lightning-charge"></i>
+                                <p>
+                                    {{ __('messages.management') }}
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-collection-fill"></i>
-                                <p>{{ __('messages.groups') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-person-vcard-fill"></i>
-                                <p>{{ __('messages.clients') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-wallet2"></i>
-                                <p>{{ __('messages.accounts') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.currencies.index') }}" class="nav-link {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-cash-stack"></i>
-                                <p>{{ __('messages.currencies') }}</p>
-                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-people-fill"></i>
+                                        <p>{{ __('messages.users') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-collection-fill"></i>
+                                        <p>{{ __('messages.groups') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-person-vcard-fill"></i>
+                                        <p>{{ __('messages.clients') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-wallet2"></i>
+                                        <p>{{ __('messages.accounts') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.currencies.index') }}" class="nav-link {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-cash-stack"></i>
+                                        <p>{{ __('messages.currencies') }}</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- المحتوى -->
-                        <li class="nav-header">📝 {{ __('messages.content') }}</li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.slides.index') }}" class="nav-link {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-image-fill"></i>
-                                <p>{{ __('messages.slides') }}</p>
+                        <li class="nav-item {{ request()->routeIs(['admin.slides.*', 'admin.services.*', 'admin.portfolios.*', 'admin.posts.*', 'admin.categories.*', 'admin.skills.*', 'admin.timelines.*']) ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs(['admin.slides.*', 'admin.services.*', 'admin.portfolios.*', 'admin.posts.*', 'admin.categories.*', 'admin.skills.*', 'admin.timelines.*']) ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-file-earmark-text"></i>
+                                <p>
+                                    {{ __('messages.content') }}
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-tools"></i>
-                                <p>{{ __('messages.services') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-briefcase-fill"></i>
-                                <p>{{ __('messages.portfolios') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-file-text-fill"></i>
-                                <p>{{ __('messages.posts') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-bookmark-star-fill"></i>
-                                <p>{{ __('messages.categories') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.skills.index') }}" class="nav-link {{ request()->routeIs('admin.skills.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-star-fill"></i>
-                                <p>{{ __('messages.skills') }}</p>
-                            </a>
-                        </li>
-                        
-                        <li class="nav-item sub-item">
-                            <a href="{{ route('admin.timelines.index') }}" class="nav-link {{ request()->routeIs('admin.timelines.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-clock-history"></i>
-                                <p>{{ __('messages.timelines') }}</p>
-                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.slides.index') }}" class="nav-link {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-image-fill"></i>
+                                        <p>{{ __('messages.slides') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-tools"></i>
+                                        <p>{{ __('messages.services') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-briefcase-fill"></i>
+                                        <p>{{ __('messages.portfolios') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-file-text-fill"></i>
+                                        <p>{{ __('messages.posts') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-bookmark-star-fill"></i>
+                                        <p>{{ __('messages.categories') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.skills.index') }}" class="nav-link {{ request()->routeIs('admin.skills.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-star-fill"></i>
+                                        <p>{{ __('messages.skills') }}</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.timelines.index') }}" class="nav-link {{ request()->routeIs('admin.timelines.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-clock-history"></i>
+                                        <p>{{ __('messages.timelines') }}</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
 
                         <!-- الإعدادات -->
-                        <li class="nav-header">⚙️ {{ __('messages.system') }}</li>
-                        
-                        <li class="nav-item">
-                            <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
-                                <i class="nav-icon bi bi-sliders"></i>
-                                <p>{{ __('messages.settings') }}</p>
+                        <li class="nav-item {{ request()->routeIs(['admin.settings.*']) ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ request()->routeIs(['admin.settings.*']) ? 'active' : '' }}">
+                                <i class="nav-icon bi bi-gear"></i>
+                                <p>
+                                    {{ __('messages.system') }}
+                                    <i class="nav-arrow bi bi-chevron-right"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item sub-item">
+                                    <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
+                                        <i class="nav-icon bi bi-sliders"></i>
+                                        <p>{{ __('messages.settings') }}</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        
+
+                        <!-- زيارة الموقع -->
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link" target="_blank">
                                 <i class="nav-icon bi bi-box-arrow-up-left"></i>

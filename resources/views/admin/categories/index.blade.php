@@ -7,9 +7,32 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.categories') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.category') }}</h5>
+            <form action="{{ route('admin.categories.store') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="name_en">{{ __('messages.name_en') }}</label>
+                            <input type="text" name="name_en" class="form-control" id="name_en" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="name_ar">{{ __('messages.name_ar') }}</label>
+                            <input type="text" name="name_ar" class="form-control" id="name_ar" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

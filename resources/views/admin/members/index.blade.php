@@ -7,9 +7,67 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.members') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.members.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.member') }}</h5>
+            <form action="{{ route('admin.members.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">{{ __('messages.arabic') }}</h6>
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.name_ar') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="name_ar" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.job_title') }} ({{ __('messages.arabic') }}) <span class="text-danger">*</span></label>
+                            <input type="text" name="job_title_ar" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 border-start">
+                        <h6 class="text-muted">{{ __('messages.english') }}</h6>
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.name_en') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="name_en" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.job_title') }} ({{ __('messages.english') }}) <span class="text-danger">*</span></label>
+                            <input type="text" name="job_title_en" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <label>{{ __('messages.facebook_link') }}</label>
+                        <input type="text" name="facebook" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>{{ __('messages.twitter_link') }}</label>
+                        <input type="text" name="twitter" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>{{ __('messages.linkedin_link') }}</label>
+                        <input type="text" name="linkedin" class="form-control">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>{{ __('messages.instagram_link') }}</label>
+                        <input type="text" name="instagram" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.personal_image') }}</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

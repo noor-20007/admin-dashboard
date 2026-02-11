@@ -6,42 +6,49 @@
 <div class="card card-primary card-outline">
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.currencies') }}</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
+                <i class="bi bi-plus"></i> {{ __('messages.add') }}
+            </button>
+        </div>
     </div>
     <div class="card-body">
         
         <!-- Add New Currency Form -->
-        <div class="mb-4 p-3 bg-light border rounded">
-            <h5 class="mb-3 text-primary"><i class="fas fa-plus-circle"></i> {{ __('messages.add') }}</h5>
-            <form action="{{ route('admin.currencies.store') }}" method="POST">
-                @csrf
-                <div class="row">
-                    <div class="col-md-3 mb-2">
-                        <label>{{ __('messages.name') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="name" class="form-control" placeholder="{{ __('messages.example_dollar') }}" required>
-                    </div>
-                    <div class="col-md-2 mb-2">
-                        <label>{{ __('messages.symbol') }} <span class="text-danger">*</span></label>
-                        <input type="text" name="symbol" class="form-control" placeholder="{{ __('messages.example_symbol') }}" required>
-                    </div>
-                     <div class="col-md-2 mb-2">
-                        <label>{{ __('messages.code') }}</label>
-                        <input type="text" name="code" class="form-control" placeholder="{{ __('messages.example_usd') }}">
-                    </div>
-                    <div class="col-md-2 mb-2">
-                         <label>&nbsp;</label>
-                         <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="is_default" value="1" id="defaultNew">
-                            <label class="form-check-label" for="defaultNew">
-                                {{ __('messages.is_default') }}
-                            </label>
+        <div class="collapse" id="create-form">
+            <div class="mb-4 p-3 bg-light border rounded">
+                <h5 class="mb-3 text-primary"><i class="fas fa-plus-circle"></i> {{ __('messages.add') }}</h5>
+                <form action="{{ route('admin.currencies.store') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-md-3 mb-2">
+                            <label>{{ __('messages.name') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="name" class="form-control" placeholder="{{ __('messages.example_dollar') }}" required>
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <label>{{ __('messages.symbol') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="symbol" class="form-control" placeholder="{{ __('messages.example_symbol') }}" required>
+                        </div>
+                         <div class="col-md-2 mb-2">
+                            <label>{{ __('messages.code') }}</label>
+                            <input type="text" name="code" class="form-control" placeholder="{{ __('messages.example_usd') }}">
+                        </div>
+                        <div class="col-md-2 mb-2">
+                             <label>&nbsp;</label>
+                             <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" name="is_default" value="1" id="defaultNew">
+                                <label class="form-check-label" for="defaultNew">
+                                    {{ __('messages.is_default') }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-success btn-block w-100">{{ __('messages.add') }}</button>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-2">
-                        <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-success btn-block w-100">{{ __('messages.add') }}</button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
         <hr>

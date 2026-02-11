@@ -7,9 +7,53 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.timelines') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.timelines.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.timeline') }}</h5>
+            <form action="{{ route('admin.timelines.store') }}" method="POST">
+                @csrf
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.year') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="year" class="form-control" required>
+                </div>
+    
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.title_en') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="title_en" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.title_ar') }} <span class="text-danger">*</span></label>
+                            <input type="text" name="title_ar" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.description_en') }} <span class="text-danger">*</span></label>
+                            <textarea name="description_en" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label>{{ __('messages.description_ar') }} <span class="text-danger">*</span></label>
+                            <textarea name="description_ar" class="form-control" rows="3" required></textarea>
+                        </div>
+                    </div>
+                </div>
+    
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

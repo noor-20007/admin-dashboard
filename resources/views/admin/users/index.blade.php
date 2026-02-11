@@ -7,9 +7,44 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.users') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.user') }}</h5>
+            <form action="{{ route('admin.users.store') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="name">{{ __('messages.name') }}</label>
+                            <input type="text" name="name" class="form-control" id="name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="email">{{ __('messages.email') }}</label>
+                            <input type="email" name="email" class="form-control" id="email" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="password">{{ __('messages.password') }}</label>
+                            <input type="password" name="password" class="form-control" id="password" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="password_confirmation">{{ __('messages.password_confirmation') }}</label>
+                            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" required>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">{{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

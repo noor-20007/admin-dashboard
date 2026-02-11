@@ -7,9 +7,32 @@
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.skills') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.skills.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="bi bi-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.skill') }}</h5>
+            <form action="{{ route('admin.skills.store') }}" method="POST">
+                @csrf
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.skill_name_ar') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_ar" class="form-control" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.skill_name_en') }} <span class="text-danger">*</span></label>
+                    <input type="text" name="name_en" class="form-control" required>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>{{ __('messages.percent') }} (0-100) <span class="text-danger">*</span></label>
+                    <input type="number" name="percentage" class="form-control" min="0" max="100" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body p-0 table-responsive">

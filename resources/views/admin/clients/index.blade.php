@@ -134,9 +134,78 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="card-header">
         <h3 class="card-title">{{ __('messages.clients') }}</h3>
         <div class="card-tools">
-            <a href="{{ route('admin.clients.create') }}" class="btn btn-primary btn-sm">
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#create-form" aria-expanded="false" aria-controls="create-form">
                 <i class="fas fa-plus"></i> {{ __('messages.add') }}
-            </a>
+            </button>
+        </div>
+    </div>
+    <div class="collapse" id="create-form">
+        <div class="card-body border-bottom bg-light">
+            <h5 class="text-primary mb-3">{{ __('messages.add') }} {{ __('messages.client') }}</h5>
+            <form action="{{ route('admin.clients.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('messages.name') }} <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">{{ __('messages.phone') }}</label>
+                        <input type="text" name="phone" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.gender') }}</label>
+                        <select name="gender" class="form-control">
+                            <option value="">-- {{ __('messages.select') }} --</option>
+                            <option value="Male">{{ __('messages.male') }}</option>
+                            <option value="Female">{{ __('messages.female') }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.age') }}</label>
+                        <input type="number" name="age" class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.identity_num') }}</label>
+                        <input type="text" name="identity_num" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.region') }}</label>
+                        <input type="text" name="region" class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.type') }}</label>
+                        <input type="text" name="type" class="form-control">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('messages.group') }}</label>
+                        <select name="group_id" class="form-control">
+                            <option value="">-- {{ __('messages.select') }} --</option>
+                            @foreach($groups as $group)
+                                <option value="{{ $group->id }}">{{ $group->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">{{ __('messages.image') }}</label>
+                    <input type="file" name="image" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
+            </form>
         </div>
     </div>
     <div class="card-body table-responsive">
