@@ -95,12 +95,12 @@ app()->setLocale($currentLang);
             </div>
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li class="home"><a href="#" class="selected scroll-link" data-id="home">{{ __('menu.home') }}</a></li>
-                    <li><a href="#" class="scroll-link" data-id="about">{{ __('menu.about') }}</a></li>
-                    <li><a href="#" class="scroll-link" data-id="services">{{ __('menu.services') }}</a></li>
-                    <li><a href="#" class="scroll-link" data-id="portoflio">{{ __('menu.portfolio') }}</a></li>
-                    <li><a href="#" class="scroll-link" data-id="blog">{{ __('menu.blog') }}</a></li>
-                    <li><a href="#" class="scroll-link" data-id="contact">{{ __('menu.contact') }}</a></li>
+                    <li class="home"><a href="#" class="selected scroll-link" data-id="home">{{ __('messages.menu_home') }}</a></li>
+                    <li><a href="#" class="scroll-link" data-id="about">{{ __('messages.menu_about') }}</a></li>
+                    <li><a href="#" class="scroll-link" data-id="services">{{ __('messages.menu_services') }}</a></li>
+                    <li><a href="#" class="scroll-link" data-id="portoflio">{{ __('messages.menu_portfolio') }}</a></li>
+                    <li><a href="#" class="scroll-link" data-id="blog">{{ __('messages.menu_blog') }}</a></li>
+                    <li><a href="#" class="scroll-link" data-id="contact">{{ __('messages.menu_contact') }}</a></li>
                     <li><a href="/?lang=ar" onclick="window.location.href='/?lang=ar'; return false;" class="lang-switcher {{ $currentLang == 'ar' ? 'selected' : '' }}">العربية</a></li>
                     <li><a href="/?lang=en" onclick="window.location.href='/?lang=en'; return false;" class="lang-switcher {{ $currentLang == 'en' ? 'selected' : '' }}">English</a></li>
                 </ul>
@@ -205,8 +205,8 @@ app()->setLocale($currentLang);
                 <!--Main Heading-->
                 <!--Main Heading-->
                 <!--Main Heading-->
-                <h2 class="page-head">{{ $setting->about_title ?? __('general.about_title_default') }}</h2>
-                <h4>{!! nl2br(e($setting->about_description ?? __('general.about_desc_default'))) !!}</h4>
+                <h2 class="page-head">{{ $setting->about_title ?? __('messages.about_title_default') }}</h2>
+                <h4>{!! nl2br(e($setting->about_description ?? __('messages.about_desc_default'))) !!}</h4>
                 <!--Main Heading End-->
 
                 <!--Icon Heading-->
@@ -217,8 +217,8 @@ app()->setLocale($currentLang);
 
                 <!--Sub Heading-->
                 <!--Sub Heading-->
-                <h3>{{ $setting->team_title ?? __('general.team_title_default') }}</h3>
-                <h4>{!! nl2br(e($setting->team_description ?? __('general.team_desc_default'))) !!}</h4>
+                <h3>{{ $setting->team_title ?? __('messages.team_title_default') }}</h3>
+                <h4>{!! nl2br(e($setting->team_description ?? __('messages.team_desc_default'))) !!}</h4>
                 <!--Sub Heading End-->
                 <!--Sub Heading End-->
             </div>
@@ -252,8 +252,8 @@ app()->setLocale($currentLang);
                 <!--Icon Heading End-->
 
                 <!--Sub Heading-->
-                <h3>{{ $setting->skills_title ?? __('general.skills_title_default') }}</h3>
-                <h4>{!! nl2br(e($setting->skills_description ?? __('general.skills_desc_default'))) !!}</h4>
+                <h3>{{ $setting->skills_title ?? __('messages.skills_title_default') }}</h3>
+                <h4>{!! nl2br(e($setting->skills_description ?? __('messages.skills_desc_default'))) !!}</h4>
                 <!--Sub Heading End-->
             </div>
             <div class="col-md-12">
@@ -291,8 +291,8 @@ app()->setLocale($currentLang);
             <!--Services Page-->
             <div class="col-md-12 text-center">
                 <!--Main Heading-->
-                <h2 class="page-head">{{ $setting->services_title ?? __('general.services_title_default') }}</h2>
-                <h4>{!! nl2br(e($setting->services_description ?? __('general.services_desc_default'))) !!}</h4>
+                <h2 class="page-head">{{ $setting->services_title ?? __('messages.services_title_default') }}</h2>
+                <h4>{!! nl2br(e($setting->services_description ?? __('messages.services_desc_default'))) !!}</h4>
                 <!--Main Heading End-->
 
                 <!--Icon Heading-->
@@ -302,8 +302,8 @@ app()->setLocale($currentLang);
                 <!--Icon Heading End-->
 
                 <!--Sub Heading-->
-                <h3>{{ $setting->services_sub_title ?? __('general.services_title_default') }}</h3>
-                <h4>{!! nl2br(e($setting->services_sub_description ?? __('general.services_desc_default'))) !!}</h4>
+                <h3>{{ $setting->services_sub_title ?? __('messages.services_title_default') }}</h3>
+                <h4>{!! nl2br(e($setting->services_sub_description ?? __('messages.services_desc_default'))) !!}</h4>
                 <!--Sub Heading End-->
             </div>
 
@@ -324,10 +324,10 @@ app()->setLocale($currentLang);
             <!--Feature Call To Action-->
             <div class="col-md-12 col-lg-12">
                 <div class="call-action text-center">
-                    <p>{{ $setting->cta_text ?? __('general.contact_desc_default') }}</p>
+                    <p>{{ $setting->cta_text ?? __('messages.contact_desc_default') }}</p>
                     <div>
-                        <a href="{{ $setting->cta_button1_link ?? '#' }}" class="btn orange">{{ $setting->cta_button1_text ?? __('general.read_more') }}</a>
-                        <a href="{{ $setting->cta_button2_link ?? '#' }}" class="btn white">{{ $setting->cta_button2_text ?? __('general.call_us') }}</a>
+                        <a href="{{ $setting->cta_button1_link ?? '#' }}" class="btn orange">{{ $setting->cta_button1_text ?? __('messages.read_more') }}</a>
+                        <a href="{{ $setting->cta_button2_link ?? '#' }}" class="btn white">{{ $setting->cta_button2_text ?? __('messages.call_us') }}</a>
                     </div>
                 </div>
             </div>
@@ -352,8 +352,8 @@ app()->setLocale($currentLang);
         <div class="row">
             <div class="col-md-12 text-center">
                 <!--Main Heading-->
-                <h2 class="page-head">{{ $setting->portfolio_title ?? __('general.portfolio_title_default') }}</h2>
-                <h4>{!! nl2br(e($setting->portfolio_description ?? __('general.portfolio_desc_default'))) !!}</h4>
+                <h2 class="page-head">{{ $setting->portfolio_title ?? __('messages.portfolio_title_default') }}</h2>
+                <h4>{!! nl2br(e($setting->portfolio_description ?? __('messages.portfolio_desc_default'))) !!}</h4>
                 <!--Main Heading End-->
             </div>
         </div>
@@ -366,7 +366,7 @@ app()->setLocale($currentLang);
                 <div class="wrapper wf">
                     <div class="col-md-12">
                         <ul class="unstyled" id="filters">
-                            <li class="filter" data-filter="all" data-role="button"><a href="javascript:void(0)">{{ __('general.all') }}</a></li>
+                            <li class="filter" data-filter="all" data-role="button"><a href="javascript:void(0)">{{ __('messages.all') }}</a></li>
                             @foreach($categories as $category)
                             <li class="filter" data-filter="{{ $category->slug }}" data-role="button"><a href="javascript:void(0)">{{ $category->name }}</a></li>
                             @endforeach
@@ -411,8 +411,8 @@ app()->setLocale($currentLang);
         <div class="row">
             <div class="col-md-12 text-center">
                 <!--Main Heading-->
-                <h2 class="page-head">{{ $setting->blog_title ?? __('general.blog_title_default') }}</h2>
-                <h4>{!! nl2br(e($setting->blog_description ?? __('general.blog_desc_default'))) !!}</h4>
+                <h2 class="page-head">{{ $setting->blog_title ?? __('messages.blog_title_default') }}</h2>
+                <h4>{!! nl2br(e($setting->blog_description ?? __('messages.blog_desc_default'))) !!}</h4>
                 <!--Main Heading End-->
             </div>
             <div class="col-md-12">
@@ -431,11 +431,11 @@ app()->setLocale($currentLang);
                             <div class="text-holder">
                                 <i class="fa fa-picture-o"></i>
                                 <div class="meta">
-                                    <span> {{ $post->published_at ? $post->published_at->format('M Y') : '' }} / {{ __('general.articles') }} </span>
+                                    <span> {{ $post->published_at ? $post->published_at->format('M Y') : '' }} / {{ __('messages.articles') }} </span>
                                 </div>
                                 <h3><a href="#">{{ $post->title }}</a></h3>
                                 <div>{!! Str::limit(strip_tags($post->content), 150) !!}</div>
-                                <a href="#" class="btn black">{{ __('general.read_more') }}</a>
+                                <a href="#" class="btn black">{{ __('messages.read_more') }}</a>
                             </div>
                         </div>
                     </div>
@@ -446,7 +446,7 @@ app()->setLocale($currentLang);
             </div>
 
             <div class="col-sm-12">
-                <a href="#" id="load-more">{{ __('general.load_more') }}</a>
+                <a href="#" id="load-more">{{ __('messages.load_more') }}</a>
             </div>
 
             <div class="clearfix"></div>
@@ -466,8 +466,8 @@ app()->setLocale($currentLang);
             <div class="col-md-12 text-center">
                 <!--Main Heading-->
                 <!--Main Heading-->
-                <h2 class="page-head">{{ $setting->contact_title ?? __('general.contact_title_default') }}</h2>
-                <h4>{!! nl2br(e($setting->contact_description ?? __('general.contact_desc_default'))) !!}</h4>                <!--Main Heading End-->
+                <h2 class="page-head">{{ $setting->contact_title ?? __('messages.contact_title_default') }}</h2>
+                <h4>{!! nl2br(e($setting->contact_description ?? __('messages.contact_desc_default'))) !!}</h4>                <!--Main Heading End-->
             </div>
         </div>
     </div>
@@ -479,7 +479,7 @@ app()->setLocale($currentLang);
                     <div class="white-wrap">
                         <div class="text-holder">
                             <i class="fa fa-map-marker"></i>
-                            <h3>{{ __('general.address') }}</h3>
+                            <h3>{{ __('messages.address') }}</h3>
                             <div>{{ $setting->address }}</div>
                         </div>
                     </div>
@@ -488,7 +488,7 @@ app()->setLocale($currentLang);
                     <div class="white-wrap">
                         <div class="text-holder">
                             <i class="fa fa-phone"></i>
-                            <h3>{{ __('general.call_us') }}</h3>
+                            <h3>{{ __('messages.call_us') }}</h3>
                             <div>{{ $setting->phone }}</div>
                         </div>
                     </div>
@@ -497,7 +497,7 @@ app()->setLocale($currentLang);
                     <div class="white-wrap">
                         <div class="text-holder">
                             <i class="fa fa-envelope"></i>
-                            <h3>{{ __('general.send_email') }}</h3>
+                            <h3>{{ __('messages.send_email') }}</h3>
                             <div><a href="mailto:{{ $setting->email }}">{{ $setting->email }}</a></div>
                         </div>
                     </div>
@@ -513,23 +513,23 @@ app()->setLocale($currentLang);
                     </div>
                     <form id="contact_form" method="post" action="#" />
                     <div class="col-sm-4">
-                        <input type="text" placeholder="{{ __('general.full_name') }}" name="الاسم" id="name" class="form-control">
+                        <input type="text" placeholder="{{ __('messages.full_name') }}" name="الاسم" id="name" class="form-control">
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" name="email" placeholder="{{ __('general.email') }}" id="email" class="form-control">
+                        <input type="text" name="email" placeholder="{{ __('messages.email') }}" id="email" class="form-control">
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" name="phone" placeholder="{{ __('general.phone') }}" id="phone" class="form-control">
+                        <input type="text" name="phone" placeholder="{{ __('messages.phone') }}" id="phone" class="form-control">
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-sm-12">
-                        <textarea name="comment" id="comment" placeholder="{{ __('general.message') }}" class="form-control" rows="3"></textarea>
+                        <textarea name="comment" id="comment" placeholder="{{ __('messages.message') }}" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="col-sm-6">
-                        <input type="submit" class="btn btn-default" value="{{ __('general.submit') }}" id="submit" />
+                        <input type="submit" class="btn btn-default" value="{{ __('messages.submit') }}" id="submit" />
                     </div>
                     <div class="col-sm-6 text-right">
-                        <h5>{{ __('general.response_message') }}</h5>
+                        <h5>{{ __('messages.response_message') }}</h5>
                     </div>
                     </form>
                 </div>
@@ -555,7 +555,7 @@ app()->setLocale($currentLang);
             </div>
         </div>
         <div class="copyright text-center">
-            © {{ date('Y') }} <span>{{ $setting->site_name }}</span>  : <a href="#">{{ __('general.and_mobile_apps') }}</a>
+            © {{ date('Y') }} <span>{{ $setting->site_name }}</span>  : <a href="#">{{ __('messages.and_mobile_apps') }}</a>
         </div>
     </footer>
 </section>
@@ -569,7 +569,7 @@ app()->setLocale($currentLang);
 
 <div class="styleswitcher" style="left: -202px;">
     <div class="arrow-box"><a class="switch-button"><i class="fa fa-gear fa-2x"></i></a> </div>
-    <h6>{{ __('general.your_color') }}</h6>
+    <h6>{{ __('messages.your_color') }}</h6>
     <ul class="color-scheme">
         <li><a class="blue-theme" rel="{{ asset('css/theme-blue.css') }}" href="#"></a></li>
         <li><a class="cherry-theme" rel="{{ asset('css/theme-cherry.css') }}" href="#"></a></li>

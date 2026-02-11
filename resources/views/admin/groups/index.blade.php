@@ -1,13 +1,13 @@
 @extends('layouts.admin')
 
-@section('title', 'إدارة المجموعات')
+@section('title', __('messages.groups'))
 
 @section('content')
 <!-- Simple Filter Bar -->
 <div class="row mb-3">
     <div class="col-md-4">
         <select name="search" class="form-select" id="groupSearch">
-            <option value="">اختر مجموعة...</option>
+            <option value="">{{ __('messages.select_group') }}</option>
             @if(isset($groups))
                 @foreach($groups as $group)
                     <option value="{{ $group->name }}" {{ request('search') == $group->name ? 'selected' : '' }}>
@@ -19,7 +19,7 @@
     </div>
     <div class="col-md-4">
         <select name="supervisor_id" class="form-select" id="supervisorFilter">
-            <option value="">كل المشرفين</option>
+            <option value="">{{ __('messages.all_supervisors') }}</option>
             @php
                 $supervisorsList = collect($groups)->whereNotNull('supervisor')->pluck('supervisor')->unique('id');
             @endphp
@@ -35,9 +35,9 @@
     <div class="col-md-4">
         <div class="btn-group w-100" role="group">
             <button type="submit" class="btn btn-primary" id="searchBtn">
-                <i class="fas fa-search"></i> بحث
+                <i class="fas fa-search"></i> {{ __('messages.search') }}
             </button>
-            <a href="{{ route('admin.groups.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+            <a href="{{ route('admin.groups.index') }}" class="btn btn-outline-secondary" title="{{ __('messages.reset') }}">
                 <i class="fas fa-times"></i>
             </a>
         </div>
@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">قائمة المجموعات</h3>
+        <h3 class="card-title">{{ __('messages.groups') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.groups.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> إضافة  
+                <i class="fas fa-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -118,10 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>اسم المجموعة</th>
-                    <th>الوصف</th>
-                    <th>المشرف</th>
-                    <th>تاريخ الإنشاء</th>
+                    <th>{{ __('messages.group_name') }}</th>
+                    <th>{{ __('messages.description') }}</th>
+                    <th>{{ __('messages.supervisor') }}</th>
+                    <th>{{ __('messages.created_at') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         @if($group->supervisor)
                             <span class="badge bg-success">{{ $group->supervisor->name }}</span>
                         @else
-                            <span class="badge bg-secondary">غير محدد</span>
+                            <span class="badge bg-secondary">{{ __('messages.not_specified') }}</span>
                         @endif
                     </td>
                     <td>{{ $group->created_at->format('Y-m-d') }}</td>
@@ -142,39 +142,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr id="edit-form-{{ $group->id }}" class="collapse">
                     <td colspan="5">
                          <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل: {{ $group->name }}</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }}: {{ $group->name }}</h5>
                             <form action="{{ route('admin.groups.update', $group->id) }}" method="POST" id="update-form-{{ $group->id }}">
                                 @csrf
                                 @method('PUT')
                                 
                                 <div class="mb-3">
-                                    <label class="form-label">اسم المجموعة <span class="text-danger">*</span></label>
+                                    <label class="form-label">{{ __('messages.group_name') }} <span class="text-danger">*</span></label>
                                     <input type="text" name="name" class="form-control" value="{{ old('name', $group->name) }}">
+                                    @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                     
                                 <div class="mb-3">
-                                    <label class="form-label">الوصف</label>
+                                    <label class="form-label">{{ __('messages.description') }}</label>
                                     <textarea name="description" class="form-control" rows="3">{{ old('description', $group->description) }}</textarea>
+                                    @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                     
                                 <div class="mb-3">
-                                    <label class="form-label">المشرف</label>
+                                    <label class="form-label">{{ __('messages.supervisor') }}</label>
                                     <select name="supervisor_id" class="form-control">
-                                        <option value="">-- اختر مشرف --</option>
+                                        <option value="">-- {{ __('messages.select') }} {{ __('messages.supervisor') }} --</option>
                                         @foreach($users as $user)
                                             <option value="{{ $user->id }}" {{ old('supervisor_id', $group->supervisor_id) == $user->id ? 'selected' : '' }}>{{ $user->name }} ({{ $user->email }})</option>
                                         @endforeach
                                     </select>
+                                    @error('supervisor_id') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                             </form>
                             
                             <div class="d-flex justify-content-between">
-                                <button type="submit" form="update-form-{{ $group->id }}" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                                <button type="submit" form="update-form-{{ $group->id }}" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
                                 
-                                <form action="{{ route('admin.groups.destroy', $group->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                <form action="{{ route('admin.groups.destroy', $group->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('{{ __('messages.confirm') }}')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> حذف</button>
+                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> {{ __('messages.delete') }}</button>
                                 </form>
                             </div>
                         </div>

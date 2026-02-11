@@ -243,14 +243,37 @@
                             <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
                         </a>
                     </li>
+                    
+                    <!-- Language Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-globe"></i>
+                            <span class="d-none d-md-inline">{{ __('messages.language') }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item {{ app()->getLocale() == 'ar' ? 'active' : '' }}" 
+                                   href="{{ route('admin.language.switch', 'ar') }}">
+                                    🇸🇦 {{ __('messages.arabic') }}
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {{ app()->getLocale() == 'en' ? 'active' : '' }}" 
+                                   href="{{ route('admin.language.switch', 'en') }}">
+                                    🇬🇧 {{ __('messages.english') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                            <i class="bi bi-person-circle"></i>
-                           <span class="d-none d-md-inline">المسؤول</span>
+                           <span class="d-none d-md-inline">{{ __('messages.admin') }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                              <li class="user-footer">
-                                <a href="#" class="btn btn-default btn-flat float-end">تسجيل الخروج</a>
+                                <a href="#" class="btn btn-default btn-flat float-end">{{ __('messages.logout') }}</a>
                             </li>
                         </ul>
                     </li>
@@ -262,7 +285,7 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="{{ url('/admin') }}" class="brand-link">
-                    <span class="brand-text fw-light">لوحة التحكم</span>
+                    <span class="brand-text fw-light">{{ __('messages.admin_panel') }}</span>
                 </a>
             </div>
             <div class="sidebar-wrapper">
@@ -273,114 +296,114 @@
                         <li class="nav-item">
                             <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-speedometer2"></i>
-                                <p>الرئيسية</p>
+                                <p>{{ __('messages.dashboard') }}</p>
                             </a>
                         </li>
 
                         <!-- الإدارة -->
-                        <li class="nav-header">⚡ الإدارة</li>
+                        <li class="nav-header">⚡ {{ __('messages.management') }}</li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-people-fill"></i>
-                                <p>المستخدمون</p>
+                                <p>{{ __('messages.users') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.groups.index') }}" class="nav-link {{ request()->routeIs('admin.groups.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-collection-fill"></i>
-                                <p>المجموعات</p>
+                                <p>{{ __('messages.groups') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.clients.index') }}" class="nav-link {{ request()->routeIs('admin.clients.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-person-vcard-fill"></i>
-                                <p>العملاء</p>
+                                <p>{{ __('messages.clients') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->routeIs('admin.accounts.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-wallet2"></i>
-                                <p>الحسابات</p>
+                                <p>{{ __('messages.accounts') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.currencies.index') }}" class="nav-link {{ request()->routeIs('admin.currencies.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-cash-stack"></i>
-                                <p>العملات</p>
+                                <p>{{ __('messages.currencies') }}</p>
                             </a>
                         </li>
 
                         <!-- المحتوى -->
-                        <li class="nav-header">📝 المحتوى</li>
+                        <li class="nav-header">📝 {{ __('messages.content') }}</li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.slides.index') }}" class="nav-link {{ request()->routeIs('admin.slides.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-image-fill"></i>
-                                <p>الشرائح</p>
+                                <p>{{ __('messages.slides') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.services.index') }}" class="nav-link {{ request()->routeIs('admin.services.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-tools"></i>
-                                <p>الخدمات</p>
+                                <p>{{ __('messages.services') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.portfolios.index') }}" class="nav-link {{ request()->routeIs('admin.portfolios.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-briefcase-fill"></i>
-                                <p>أعمالنا</p>
+                                <p>{{ __('messages.portfolios') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.posts.index') }}" class="nav-link {{ request()->routeIs('admin.posts.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-file-text-fill"></i>
-                                <p>المقالات</p>
+                                <p>{{ __('messages.posts') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-bookmark-star-fill"></i>
-                                <p>الأقسام</p>
+                                <p>{{ __('messages.categories') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.skills.index') }}" class="nav-link {{ request()->routeIs('admin.skills.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-star-fill"></i>
-                                <p>المهارات</p>
+                                <p>{{ __('messages.skills') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item sub-item">
                             <a href="{{ route('admin.timelines.index') }}" class="nav-link {{ request()->routeIs('admin.timelines.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-clock-history"></i>
-                                <p>التايم لاين</p>
+                                <p>{{ __('messages.timelines') }}</p>
                             </a>
                         </li>
 
                         <!-- الإعدادات -->
-                        <li class="nav-header">⚙️ النظام</li>
+                        <li class="nav-header">⚙️ {{ __('messages.system') }}</li>
                         
                         <li class="nav-item">
                             <a href="{{ route('admin.settings.edit') }}" class="nav-link {{ request()->routeIs('admin.settings.*') ? 'active' : '' }}">
                                 <i class="nav-icon bi bi-sliders"></i>
-                                <p>الإعدادات</p>
+                                <p>{{ __('messages.settings') }}</p>
                             </a>
                         </li>
                         
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link" target="_blank">
                                 <i class="nav-icon bi bi-box-arrow-up-left"></i>
-                                <p>زيارة الموقع</p>
+                                <p>{{ __('messages.visit_site') }}</p>
                             </a>
                         </li>
 

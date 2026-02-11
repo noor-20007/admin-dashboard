@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'المستخدمين')
+@section('title', __('messages.users'))
 
 @section('content')
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">إدارة المستخدمين</h3>
+        <h3 class="card-title">{{ __('messages.users') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus"></i> إضافة 
+                <i class="bi bi-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -17,9 +17,9 @@
             <thead>
                 <tr>
                     <th style="width: 1%">#</th>
-                    <th>الاسم</th>
-                    <th>البريد الإلكتروني</th>
-                    <th>تاريخ التسجيل</th>
+                    <th>{{ __('messages.name') }}</th>
+                    <th>{{ __('messages.email') }}</th>
+                    <th>{{ __('messages.created_at') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,37 +33,69 @@
                 <tr id="edit-form-{{ $user->id }}" class="collapse">
                     <td colspan="4">
                         <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل المستخدم</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }} {{ __('messages.user') }}</h5>
                             <form action="{{ route('admin.users.update', $user->id) }}" method="POST" id="update-form-{{ $user->id }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
+                                    @if($errors->any())
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <h5 class="alert-heading">{{ __('messages.please_correct_errors') }}:</h5>
+                                            <ul class="mb-0">
+                                                @foreach($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+                                    @endif
+                                    
                                     <div class="form-group mb-3">
-                                        <label for="name">الاسم</label>
-                                        <input type="text" name="name" class="form-control" id="name" value="{{ $user->name }}" required>
+                                        <label for="name">{{ __('messages.name') }}</label>
+                                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" id="name" value="{{ old('name', $user->name) }}" required>
+                                        @error('name')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="email">البريد الإلكتروني</label>
-                                        <input type="email" name="email" class="form-control" id="email" value="{{ $user->email }}" required>
+                                        <label for="email">{{ __('messages.email') }}</label>
+                                        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" id="email" value="{{ old('email', $user->email) }}" required>
+                                        @error('email')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                     <div class="form-group mb-3">
-                                        <label for="password">كلمة المرور</label>
-                                        <input type="text" name="password" class="form-control" id="password" value="{{ $user->password }}">
+                                        <label for="password">{{ __('messages.password') }}</label>
+                                        <input type="text" name="password" class="form-control @error('password') is-invalid @enderror" id="password" value="{{ old('password', $user->password) }}" placeholder="{{ __('messages.leave_empty_to_keep_password') }}">
+                                        @error('password')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                      <div class="form-group mb-3">
-                                        <label for="password_confirmation">تأكيد كلمة المرور</label>
-                                        <input type="password" name="password_confirmation" class="form-control" id="password_confirmation">
+                                        <label for="password_confirmation">{{ __('messages.password_confirmation') }}</label>
+                                        <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation">
+                                        @error('password_confirmation')
+                                            <div class="invalid-feedback d-block">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </div>
                             </form>
                             
                             <div class="d-flex justify-content-between">
-                                <button type="submit" form="update-form-{{ $user->id }}" class="btn btn-primary">تحديث</button>
+                                <button type="submit" form="update-form-{{ $user->id }}" class="btn btn-primary">{{ __('messages.update') }}</button>
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">
-                                        <i class="bi bi-trash"></i> حذف
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('messages.confirm') }}')">
+                                        <i class="bi bi-trash"></i> {{ __('messages.delete') }}
                                     </button>
                                 </form>
                             </div>

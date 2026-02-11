@@ -97,7 +97,7 @@ class AccountController extends Controller
             'group_id' => 'nullable|exists:groups,id',
             'date' => 'nullable|date',
             'amount' => 'nullable|numeric',
-            'reference_number' => 'nullable|string',
+            'reference_number' => 'required|string|unique:accounts,reference_number',
             'status' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);
@@ -134,7 +134,7 @@ class AccountController extends Controller
             'group_id' => 'nullable|exists:groups,id',
             'date' => 'nullable|date',
             'amount' => 'nullable|numeric',
-            'reference_number' => 'nullable|string',
+            'reference_number' => 'required|string|unique:accounts,reference_number,' . $account->id,
             'status' => 'nullable|string',
             'notes' => 'nullable|string',
         ]);

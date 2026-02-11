@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'إدارة العملاء')
+@section('title', __('messages.clients'))
 
 @section('content')
 <div class="row mb-4">
@@ -8,7 +8,7 @@
         <div class="small-box bg-info">
             <div class="inner">
                 <h3>{{ $stats['total'] }}</h3>
-                <p>إجمالي العملاء</p>
+                <p>{{ __('messages.total') }} {{ __('messages.clients') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-users"></i>
@@ -19,7 +19,7 @@
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>{{ $stats['new_month'] }}</h3>
-                <p>عملاء جدد (هذا الشهر)</p>
+                <p>{{ __('messages.new_month') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-user-plus"></i>
@@ -30,7 +30,7 @@
         <div class="small-box bg-primary">
             <div class="inner">
                 <h3>{{ $stats['males'] }}</h3>
-                <p>الذكور</p>
+                <p>{{ __('messages.males') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-male"></i>
@@ -41,7 +41,7 @@
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>{{ $stats['females'] }}</h3>
-                <p>الإناث</p>
+                <p>{{ __('messages.females') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-female"></i>
@@ -54,7 +54,7 @@
 <div class="row mb-3">
     <div class="col-md-3">
         <select name="search" class="form-select" id="clientSearch">
-            <option value="">اختر عميلاً...</option>
+            <option value="">{{ __('messages.select_client') }}</option>
             @if(isset($clients))
                 @foreach($clients as $client)
                     <option value="{{ $client->name }}" {{ request('search') == $client->name ? 'selected' : '' }}>
@@ -69,7 +69,7 @@
     </div>
     <div class="col-md-3">
         <select name="group_id" class="form-select" id="groupFilter">
-            <option value="">جميع المجموعات</option>
+            <option value="">{{ __('messages.all_groups') }}</option>
             @foreach($groups as $group)
                 <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
             @endforeach
@@ -77,17 +77,17 @@
     </div>
     <div class="col-md-3">
         <select name="gender" class="form-select" id="genderFilter">
-            <option value="">الكل (الجنس)</option>
-            <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>ذكر</option>
-            <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>أنثى</option>
+            <option value="">{{ __('messages.all_genders') }}</option>
+            <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>{{ __('messages.male') }}</option>
+            <option value="Female" {{ request('gender') == 'Female' ? 'selected' : '' }}>{{ __('messages.female') }}</option>
         </select>
     </div>
     <div class="col-md-3">
         <div class="btn-group w-100" role="group">
             <button type="submit" class="btn btn-primary" id="searchBtn">
-                <i class="fas fa-search"></i> بحث
+                <i class="fas fa-search"></i> {{ __('messages.search') }}
             </button>
-            <a href="{{ route('admin.clients.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+            <a href="{{ route('admin.clients.index') }}" class="btn btn-outline-secondary" title="{{ __('messages.reset') }}">
                 <i class="fas fa-times"></i>
             </a>
         </div>
@@ -132,10 +132,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">قائمة العملاء</h3>
+        <h3 class="card-title">{{ __('messages.clients') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.clients.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> إضافة  
+                <i class="fas fa-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -143,21 +143,21 @@ document.addEventListener('DOMContentLoaded', function() {
         <table class="table table-bordered table-striped text-nowrap">
             <thead>
                 <tr>
-                    <th>الصورة</th>
-                    <th>الاسم</th>
-                    <th>الجنس</th>
-                    <th>العمر</th>
-                    <th>رقم الهوية</th>
-                    <th>الهاتف</th>
-                    <th>المنطقة</th>
-                    <th>النوع</th>
-                    <th>المجموعة</th>
-                    <th>تاريخ الإضافة</th>
+                    <th>{{ __('messages.image') }}</th>
+                    <th>{{ __('messages.name') }}</th>
+                    <th>{{ __('messages.gender') }}</th>
+                    <th>{{ __('messages.age') }}</th>
+                    <th>{{ __('messages.identity_num') }}</th>
+                    <th>{{ __('messages.phone') }}</th>
+                    <th>{{ __('messages.region') }}</th>
+                    <th>{{ __('messages.type') }}</th>
+                    <th>{{ __('messages.group') }}</th>
+                    <th>{{ __('messages.created_at') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($clients as $client)
-                <tr data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">
+                <tr>
                     <td>
                         @if($client->image)
                             <img src="{{ asset($client->image) }}" alt="{{ $client->name }}" width="50" class="img-circle">
@@ -165,79 +165,91 @@ document.addEventListener('DOMContentLoaded', function() {
                             <i class="fas fa-user-circle fa-2x text-muted"></i>
                         @endif
                     </td>
-                    <td>{{ $client->name }}</td>
-                    <td>{{ $client->gender }}</td>
-                    <td>{{ $client->age }}</td>
-                    <td>{{ $client->identity_num }}</td>
-                    <td>{{ $client->phone }}</td>
-                    <td>{{ $client->region }}</td>
-                    <td>{{ $client->type }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->name }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->gender }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->age }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->identity_num }}</td>
                     <td>
+                        @if($client->phone)
+                            <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $client->phone) }}" 
+                               target="_blank" 
+                               class="text-success text-decoration-none"
+                               title="{{ __('messages.open_in_whatsapp') }}"
+                               onclick="event.stopPropagation()">
+                                <i class="fab fa-whatsapp"></i> {{ $client->phone }}
+                            </a>
+                        @else
+                            <span class="text-muted">-</span>
+                        @endif
+                    </td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->region }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->type }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">
                         @if($client->group)
                             <span class="badge bg-primary">{{ $client->group->name }}</span>
                         @else
-                            <span class="badge bg-secondary">غير محدد</span>
+                            <span class="badge bg-secondary">{{ __('messages.not_specified') }}</span>
                         @endif
                     </td>
-                    <td>{{ $client->created_at->format('d-m-Y') }}</td>
+                    <td data-bs-toggle="collapse" data-bs-target="#edit-form-{{ $client->id }}" style="cursor: pointer;">{{ $client->created_at->format('d-m-Y') }}</td>
                 </tr>
                 <tr id="edit-form-{{ $client->id }}" class="collapse">
                     <td colspan="10">
                         <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل: {{ $client->name }}</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }}: {{ $client->name }}</h5>
                             <form action="{{ route('admin.clients.update', $client->id) }}" method="POST" enctype="multipart/form-data" id="update-form-{{ $client->id }}">
                                 @csrf
                                 @method('PUT')
                                 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">الاسم <span class="text-danger">*</span></label>
+                                        <label class="form-label">{{ __('messages.name') }} <span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control" value="{{ old('name', $client->name) }}">
                                         @error('name') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">الهاتف</label>
+                                        <label class="form-label">{{ __('messages.phone') }}</label>
                                         <input type="text" name="phone" class="form-control" value="{{ old('phone', $client->phone) }}">
                                     </div>
                                 </div>
                     
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">الجنس</label>
+                                        <label class="form-label">{{ __('messages.gender') }}</label>
                                         <select name="gender" class="form-control">
-                                            <option value="">-- اختر --</option>
-                                            <option value="Male" {{ old('gender', $client->gender) == 'Male' ? 'selected' : '' }}>ذكر</option>
-                                            <option value="Female" {{ old('gender', $client->gender) == 'Female' ? 'selected' : '' }}>أنثى</option>
+                                            <option value="">-- {{ __('messages.select') }} --</option>
+                                            <option value="Male" {{ old('gender', $client->gender) == 'Male' ? 'selected' : '' }}>{{ __('messages.male') }}</option>
+                                            <option value="Female" {{ old('gender', $client->gender) == 'Female' ? 'selected' : '' }}>{{ __('messages.female') }}</option>
                                         </select>
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">العمر</label>
+                                        <label class="form-label">{{ __('messages.age') }}</label>
                                         <input type="number" name="age" class="form-control" value="{{ old('age', $client->age) }}">
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">رقم الهوية</label>
+                                        <label class="form-label">{{ __('messages.identity_num') }}</label>
                                         <input type="text" name="identity_num" class="form-control" value="{{ old('identity_num', $client->identity_num) }}">
                                     </div>
                                 </div>
                     
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">المنطقة</label>
+                                        <label class="form-label">{{ __('messages.region') }}</label>
                                         <input type="text" name="region" class="form-control" value="{{ old('region', $client->region) }}">
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">النوع (Type)</label>
+                                        <label class="form-label">{{ __('messages.type') }}</label>
                                         <input type="text" name="type" class="form-control" value="{{ old('type', $client->type) }}">
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">المجموعة</label>
+                                        <label class="form-label">{{ __('messages.group') }}</label>
                                         <select name="group_id" class="form-control">
-                                            <option value="">-- اختر --</option>
+                                            <option value="">-- {{ __('messages.select') }} --</option>
                                             @foreach($groups as $group)
                                                  <option value="{{ $group->id }}" {{ old('group_id', $client->group_id) == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
                                             @endforeach
@@ -246,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 </div>
                     
                                 <div class="mb-3">
-                                    <label class="form-label">الصورة</label>
+                                    <label class="form-label">{{ __('messages.image') }}</label>
                                     @if($client->image)
                                         <div class="mb-2"><img src="{{ asset($client->image) }}" width="100" class="img-thumbnail"></div>
                                     @endif
@@ -255,12 +267,12 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             </form>
                             <div class="d-flex justify-content-between">
-                                <button type="submit" form="update-form-{{ $client->id }}" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                                <button type="submit" form="update-form-{{ $client->id }}" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save') }}</button>
                                 
-                                <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                <form action="{{ route('admin.clients.destroy', $client->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('{{ __('messages.confirm') }}')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> حذف</button>
+                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> {{ __('messages.delete') }}</button>
                                 </form>
                             </div>
                         </div>

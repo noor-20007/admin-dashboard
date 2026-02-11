@@ -43,7 +43,12 @@
 
                 <div class="col-md-4 mb-3">
                     <label class="form-label">رقم السند</label>
-                    <input type="text" name="reference_number" class="form-control" value="{{ old('reference_number', $account->reference_number) }}">
+                    <input type="text" name="reference_number" class="form-control @error('reference_number') is-invalid @enderror" value="{{ old('reference_number', $account->reference_number) }}" required>
+                    @error('reference_number')
+                        <div class="invalid-feedback d-block">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
             </div>
 

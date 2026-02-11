@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'الشرائح (Slider)')
+@section('title', __('messages.slides'))
 
 @section('content')
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">إدارة الشرائح</h3>
+        <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.slides') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.slides.create') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus"></i> إضافة 
+                <i class="bi bi-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -17,10 +17,10 @@
             <thead>
                 <tr>
                     <th style="width: 1%">#</th>
-                    <th style="width: 20%">الخلفية</th>
-                    <th style="width: 20%">الصورة الأمامية</th>
-                    <th>العنوان</th>
-                    <th style="width: 10%">الترتيب</th>
+                    <th style="width: 20%">{{ __('messages.background_image') }}</th>
+                    <th style="width: 20%">{{ __('messages.foreground_image') }}</th>
+                    <th>{{ __('messages.title') }}</th>
+                    <th style="width: 10%">{{ __('messages.sort_order') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,34 +43,21 @@
                 <tr id="edit-form-{{ $slide->id }}" class="collapse">
                     <td colspan="5">
                         <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل الشريحة</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }} {{ __('messages.slide') }}</h5>
                             <form action="{{ route('admin.slides.update', $slide->id) }}" method="POST" enctype="multipart/form-data" id="update-form-{{ $slide->id }}">
                                 @csrf
                                 @method('PUT')
                                 <div class="card-body">
-                                    
-                                    <!-- Tabs -->
-                                    <ul class="nav nav-tabs mb-4" id="langTab-{{ $slide->id }}" role="tablist">
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link active" id="ar-tab-{{ $slide->id }}" data-bs-toggle="tab" data-bs-target="#ar-{{ $slide->id }}" type="button" role="tab" aria-controls="ar-{{ $slide->id }}" aria-selected="true">العربية</button>
-                                        </li>
-                                        <li class="nav-item" role="presentation">
-                                            <button class="nav-link" id="en-tab-{{ $slide->id }}" data-bs-toggle="tab" data-bs-target="#en-{{ $slide->id }}" type="button" role="tab" aria-controls="en-{{ $slide->id }}" aria-selected="false">English</button>
-                                        </li>
-                                    </ul>
-                        
-                                     <div class="tab-content mb-4" id="langTabContent-{{ $slide->id }}">
-                                        <!-- Arabic Tab -->
-                                        <div class="tab-pane fade show active" id="ar-{{ $slide->id }}" role="tabpanel" aria-labelledby="ar-tab-{{ $slide->id }}">
+                                    <div class="row">
+                                        <div class="col-md-6">
                                             <div class="form-group mb-3">
-                                                <label for="title_ar">العنوان (عربي)</label>
+                                                <label for="title_ar">{{ __('messages.title_ar') }}</label>
                                                 <input type="text" name="title_ar" class="form-control" id="title_ar" value="{{ $slide->getTitleArAttribute() }}">
                                             </div>
                                         </div>
-                                         <!-- English Tab -->
-                                        <div class="tab-pane fade" id="en-{{ $slide->id }}" role="tabpanel" aria-labelledby="en-tab-{{ $slide->id }}" dir="ltr">
+                                        <div class="col-md-6">
                                             <div class="form-group mb-3">
-                                                <label for="title_en">Title (English)</label>
+                                                <label for="title_en">{{ __('messages.title_en') }}</label>
                                                 <input type="text" name="title_en" class="form-control" id="title_en" value="{{ $slide->getTitleEnAttribute() }}">
                                             </div>
                                         </div>
@@ -79,7 +66,7 @@
                                     <hr>
                         
                                     <div class="form-group mb-3">
-                                        <label for="image">صورة الخلفية</label>
+                                        <label for="image">{{ __('messages.background_image') }}</label>
                                         @if($slide->image)
                                             <div class="mb-2">
                                                 <img src="{{ asset($slide->image) }}" width="150" class="img-thumbnail">
@@ -88,11 +75,11 @@
                                         <div class="input-group">
                                             <input type="file" name="image" class="form-control" id="image">
                                         </div>
-                                        <small class="text-muted">اتركها فارغة للإبقاء على الصورة الحالية</small>
+                                        <small class="text-muted">{{ __('messages.leave_empty_to_keep_image') }}</small>
                                     </div>
                         
                                     <div class="form-group mb-3">
-                                        <label for="foreground_image">الصورة الأمامية</label>
+                                        <label for="foreground_image">{{ __('messages.foreground_image') }}</label>
                                         @if($slide->foreground_image)
                                             <div class="mb-2">
                                                 <img src="{{ asset($slide->foreground_image) }}" width="150" class="img-thumbnail">
@@ -101,23 +88,23 @@
                                         <div class="input-group">
                                             <input type="file" name="foreground_image" class="form-control" id="foreground_image">
                                         </div>
-                                        <small class="text-muted">اتركها فارغة للإبقاء على الصورة الحالية</small>
+                                        <small class="text-muted">{{ __('messages.leave_empty_to_keep_image') }}</small>
                                     </div>
                         
                                     <div class="form-group mb-3">
-                                        <label for="sort_order">ترتيب الظهور</label>
+                                        <label for="sort_order">{{ __('messages.sort_order') }}</label>
                                         <input type="number" name="sort_order" class="form-control" id="sort_order" value="{{ $slide->sort_order }}">
                                     </div>
                                 </div>
                             </form>
                             
                             <div class="d-flex justify-content-between">
-                                <button type="submit" form="update-form-{{ $slide->id }}" class="btn btn-primary">تحديث</button>
+                                <button type="submit" form="update-form-{{ $slide->id }}" class="btn btn-primary">{{ __('messages.update') }}</button>
                                 <form action="{{ route('admin.slides.destroy', $slide->id) }}" method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">
-                                        <i class="bi bi-trash"></i> حذف
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('messages.confirm') }}')">
+                                        <i class="bi bi-trash"></i> {{ __('messages.delete') }}
                                     </button>
                                 </form>
                             </div>

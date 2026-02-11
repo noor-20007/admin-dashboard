@@ -1,14 +1,14 @@
 @extends('layouts.admin')
 
-@section('title', 'المقالات')
+@section('title', __('messages.posts'))
 
 @section('content')
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">إدارة المقالات</h3>
+        <h3 class="card-title">{{ __('messages.manage') }} {{ __('messages.posts') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.posts.create') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus"></i> إضافة  
+                <i class="bi bi-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -17,9 +17,9 @@
             <thead>
                 <tr>
                     <th style="width: 1%">#</th>
-                    <th style="width: 20%">الصورة</th>
-                    <th>العنوان</th>
-                    <th>تاريخ النشر</th>
+                    <th style="width: 20%">{{ __('messages.image') }}</th>
+                    <th>{{ __('messages.title') }}</th>
+                    <th>{{ __('messages.published_date') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,12 +32,12 @@
                         @endif
                     </td>
                     <td>{{ $post->title }}</td>
-                    <td>{{ $post->published_at ? $post->published_at->format('Y-m-d') : 'مسودة' }}</td>
+                    <td>{{ $post->published_at ? $post->published_at->format('Y-m-d') : __('messages.draft') }}</td>
                 </tr>
                 <tr id="edit-form-{{ $post->id }}" class="collapse">
                     <td colspan="4">
                         <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل المقال</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }} {{ __('messages.post') }}</h5>
                             <form action="{{ route('admin.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data" id="update-form-{{ $post->id }}">
                                 @csrf
                                 @method('PUT')
@@ -45,40 +45,40 @@
                                      <div class="row">
                                         <div class="col-md-6">
                                              <div class="form-group mb-3">
-                                                <label for="title_en">العنوان (English)</label>
+                                                <label for="title_en">{{ __('messages.title_en') }}</label>
                                                 <input type="text" name="title_en" class="form-control" id="title_en" value="{{ $post->getTitleEnAttribute() }}" required>
                                             </div>
                                         </div>
                                          <div class="col-md-6">
                                              <div class="form-group mb-3">
-                                                <label for="title_ar">العنوان (Arabic)</label>
+                                                <label for="title_ar">{{ __('messages.title_ar') }}</label>
                                                 <input type="text" name="title_ar" class="form-control" id="title_ar" value="{{ $post->getTitleArAttribute() }}" required>
                                             </div>
                                         </div>
-                                    </div>
+                                     </div>
                         
-                                    <div class="row">
+                                     <div class="row">
                                         <div class="col-md-6">
                                              <div class="form-group mb-3">
-                                                <label for="content_en">المحتوى (English)</label>
+                                                <label for="content_en">{{ __('messages.content_en') }}</label>
                                                 <textarea name="content_en" class="form-control" id="content_en" rows="5">{{ $post->getContentEnAttribute() }}</textarea>
                                             </div>
                                         </div>
                                          <div class="col-md-6">
                                              <div class="form-group mb-3">
-                                                <label for="content_ar">المحتوى (Arabic)</label>
+                                                <label for="content_ar">{{ __('messages.content_ar') }}</label>
                                                 <textarea name="content_ar" class="form-control" id="content_ar" rows="5">{{ $post->getContentArAttribute() }}</textarea>
                                             </div>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group mb-3">
-                                        <label for="published_at">تاريخ النشر</label>
+                                        <label for="published_at">{{ __('messages.published_date') }}</label>
                                         <input type="date" name="published_at" class="form-control" id="published_at" value="{{ $post->published_at ? $post->published_at->format('Y-m-d') : '' }}">
                                     </div>
                         
                                     <div class="form-group mb-3">
-                                        <label for="image">الصورة</label>
+                                        <label for="image">{{ __('messages.image') }}</label>
                                          @if($post->image)
                                             <div class="mb-2">
                                                 <img src="{{ asset($post->image) }}" width="150" class="img-thumbnail">
@@ -87,18 +87,18 @@
                                         <div class="input-group">
                                             <input type="file" name="image" class="form-control" id="image">
                                         </div>
-                                         <small class="text-muted">اتركها فارغة للإبقاء على الصورة الحالية</small>
+                                         <small class="text-muted">{{ __('messages.leave_empty_to_keep_image') }}</small>
                                     </div>
                                 </div>
                             </form>
                             
                             <div class="d-flex justify-content-between">
-                                <button type="submit" form="update-form-{{ $post->id }}" class="btn btn-primary">تحديث</button>
+                                <button type="submit" form="update-form-{{ $post->id }}" class="btn btn-primary">{{ __('messages.update') }}</button>
                                 <form action="{{ route('admin.posts.destroy', $post->id) }}" method="POST" style="display: inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('هل أنت متأكد؟')">
-                                        <i class="bi bi-trash"></i> حذف
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('{{ __('messages.confirm') }}')">
+                                        <i class="bi bi-trash"></i> {{ __('messages.delete') }}
                                     </button>
                                 </form>
                             </div>

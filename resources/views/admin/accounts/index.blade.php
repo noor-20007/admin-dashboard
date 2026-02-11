@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'إدارة الحسابات')
+@section('title', __('messages.accounts'))
 
 @section('content')
 <div class="row mb-4">
@@ -8,7 +8,7 @@
         <div class="small-box bg-purple">
             <div class="inner">
                 <h3>{{ number_format($stats['total_amount'], 2) }}</h3>
-                <p>إجمالي المبالغ</p>
+                <p>{{ __('messages.total_amount') }}</p>
             </div>
             <div class="icon">
                 <i class="fas fa-money-bill-wave"></i>
@@ -19,7 +19,7 @@
         <div class="small-box bg-success">
             <div class="inner">
                 <h3>{{ number_format($stats['total_paid'], 2) }}</h3>
-                <p>المبالغ المحصلة (Paid)</p>
+                <p>{{ __('messages.total_paid') }} ({{ __('messages.paid') }})</p>
             </div>
             <div class="icon">
                 <i class="fas fa-check-circle"></i>
@@ -30,7 +30,7 @@
         <div class="small-box bg-warning">
             <div class="inner">
                 <h3>{{ number_format($stats['total_pending'], 2) }}</h3>
-                <p>ديون / معلقة (Pending)</p>
+                <p>{{ __('messages.total_pending') }} ({{ __('messages.pending') }})</p>
             </div>
             <div class="icon">
                 <i class="fas fa-clock"></i>
@@ -41,7 +41,7 @@
         <div class="small-box bg-danger">
             <div class="inner">
                 <h3>{{ number_format($stats['total_canceled'], 2) }}</h3>
-                <p>ملغاة (Canceled)</p>
+                <p>{{ __('messages.total_canceled') }} ({{ __('messages.canceled') }})</p>
             </div>
             <div class="icon">
                 <i class="fas fa-times-circle"></i>
@@ -54,7 +54,7 @@
 <div class="row mb-3">
     <div class="col-md-3">
         <select name="search" class="form-select" id="accountSearch">
-            <option value="">اختر حساب...</option>
+            <option value="">{{ __('messages.select_account') }}</option>
             @if(isset($accounts))
                 @foreach($accounts as $account)
                     <option value="{{ $account->name }}" {{ request('search') == $account->name ? 'selected' : '' }}>
@@ -69,7 +69,7 @@
     </div>
     <div class="col-md-2">
         <select name="group_id" class="form-select" id="groupFilter">
-            <option value="">المجموعات</option>
+            <option value="">{{ __('messages.groups') }}</option>
             @foreach($groups as $group)
                 <option value="{{ $group->id }}" {{ request('group_id') == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
             @endforeach
@@ -77,24 +77,24 @@
     </div>
     <div class="col-md-2">
         <select name="status" class="form-select" id="statusFilter">
-            <option value="">الحالة</option>
-            <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>Paid</option>
-            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
-            <option value="Canceled" {{ request('status') == 'Canceled' ? 'selected' : '' }}>Canceled</option>
+            <option value="">{{ __('messages.status') }}</option>
+            <option value="Paid" {{ request('status') == 'Paid' ? 'selected' : '' }}>{{ __('messages.paid') }}</option>
+            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>{{ __('messages.pending') }}</option>
+            <option value="Canceled" {{ request('status') == 'Canceled' ? 'selected' : '' }}>{{ __('messages.canceled') }}</option>
         </select>
     </div>
     <div class="col-md-2">
-        <input type="date" name="date_from" class="form-control" id="dateFrom" placeholder="من تاريخ" value="{{ request('date_from') }}">
+        <input type="date" name="date_from" class="form-control" id="dateFrom" placeholder="{{ __('messages.from_date') }}" value="{{ request('date_from') }}">
     </div>
     <div class="col-md-2">
-        <input type="date" name="date_to" class="form-control" id="dateTo" placeholder="إلى تاريخ" value="{{ request('date_to') }}">
+        <input type="date" name="date_to" class="form-control" id="dateTo" placeholder="{{ __('messages.to_date') }}" value="{{ request('date_to') }}">
     </div>
     <div class="col-md-1">
         <div class="btn-group w-100" role="group">
             <button type="submit" class="btn btn-primary" id="searchBtn">
                 <i class="fas fa-search"></i>
             </button>
-            <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline-secondary" title="إلغاء الفلتر">
+            <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline-secondary" title="{{ __('messages.reset') }}">
                 <i class="fas fa-times"></i>
             </a>
         </div>
@@ -144,10 +144,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div class="card card-primary card-outline">
     <div class="card-header">
-        <h3 class="card-title">قائمة الحسابات</h3>
+        <h3 class="card-title">{{ __('messages.accounts') }}</h3>
         <div class="card-tools">
             <a href="{{ route('admin.accounts.create') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-plus"></i> إضافة  
+                <i class="fas fa-plus"></i> {{ __('messages.add') }}
             </a>
         </div>
     </div>
@@ -155,13 +155,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <table class="table table-bordered table-striped text-nowrap">
             <thead>
                 <tr>
-                    <th>الاسم</th>
-                    <th>المجموعة</th>
-                    <th>التاريخ</th>
-                    <th>المطلوب (Amount)</th>
-                    <th>رقم السند</th>
-                    <th>الحالة</th>
-                    <th>الملاحظات</th>
+                    <th>{{ __('messages.name') }}</th>
+                    <th>{{ __('messages.group') }}</th>
+                    <th>{{ __('messages.date') }}</th>
+                    <th>{{ __('messages.amount') }}</th>
+                    <th>{{ __('messages.reference_number') }}</th>
+                    <th>{{ __('messages.status') }}</th>
+                    <th>{{ __('messages.notes') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         @if($account->group)
                             <span class="badge bg-primary">{{ $account->group->name }}</span>
                         @else
-                            <span class="badge bg-secondary">غير محدد</span>
+                            <span class="badge bg-secondary">{{ __('messages.not_specified') }}</span>
                         @endif
                     </td>
                     <td>{{ $account->date }}</td>
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <tr id="edit-form-{{ $account->id }}" class="collapse">
                     <td colspan="7">
                         <div class="p-3 bg-light border">
-                            <h5 class="text-primary mb-3">تعديل: {{ $account->name }}</h5>
+                            <h5 class="text-primary mb-3">{{ __('messages.edit') }}: {{ $account->name }}</h5>
                             <form action="{{ route('admin.accounts.update', $account->id) }}" method="POST" id="update-form-{{ $account->id }}" class="account-edit-form"
                                 data-original-name="{{ $account->name }}"
                                 data-original-amount="{{ $account->amount }}"
@@ -194,9 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">الاسم <span class="text-danger">*</span></label>
+                                        <label class="form-label">{{ __('messages.name') }} <span class="text-danger">*</span></label>
                                         <select name="name" class="form-control select2 client-select" required>
-                                            <option value="">-- اختر العميل --</option>
+                                            <option value="">{{ __('messages.select_client') }}</option>
                                             @foreach($clients as $client)
                                                 <option value="{{ $client->name }}" {{ old('name', $account->name) == $client->name ? 'selected' : '' }}>{{ $client->name }}</option>
                                             @endforeach
@@ -204,9 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                     
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">المجموعة</label>
+                                        <label class="form-label">{{ __('messages.group') }}</label>
                                         <select name="group_id" class="form-control">
-                                            <option value="">-- اختر --</option>
+                                            <option value="">{{ __('messages.select') }}</option>
                                             @foreach($groups as $group)
                                                 <option value="{{ $group->id }}" {{ old('group_id', $account->group_id) == $group->id ? 'selected' : '' }}>{{ $group->name }}</option>
                                             @endforeach
@@ -216,58 +216,58 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                                 <div class="row">
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">التاريخ</label>
+                                        <label class="form-label">{{ __('messages.date') }}</label>
                                         <input type="date" name="date" class="form-control" value="{{ old('date', $account->date) }}">
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">المطلوب (Amount)</label>
+                                        <label class="form-label">{{ __('messages.amount') }}</label>
                                         <input type="number" step="0.01" name="amount" class="form-control amount-input" value="{{ old('amount', $account->amount) }}">
                                     </div>
                     
                                     <div class="col-md-4 mb-3">
-                                        <label class="form-label">رقم السند</label>
+                                        <label class="form-label">{{ __('messages.reference_number') }}</label>
                                         <input type="text" name="reference_number" class="form-control" value="{{ old('reference_number', $account->reference_number) }}">
                                     </div>
                                 </div>
                     
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">الحالة</label>
+                                        <label class="form-label">{{ __('messages.status') }}</label>
                                         <select name="status" class="form-control status-select">
-                                            <option value="Pending" {{ old('status', $account->status) == 'Pending' ? 'selected' : '' }}>مديونية (Pending)</option>
-                                            <option value="Paid" {{ old('status', $account->status) == 'Paid' ? 'selected' : '' }}>خالص (Paid)</option>
-                                            <option value="Canceled" {{ old('status', $account->status) == 'Canceled' ? 'selected' : '' }}>ملغي (Canceled)</option>
+                                            <option value="Pending" {{ old('status', $account->status) == 'Pending' ? 'selected' : '' }}>{{ __('messages.pending') }} (Pending)</option>
+                                            <option value="Paid" {{ old('status', $account->status) == 'Paid' ? 'selected' : '' }}>{{ __('messages.paid') }} (Paid)</option>
+                                            <option value="Canceled" {{ old('status', $account->status) == 'Canceled' ? 'selected' : '' }}>{{ __('messages.canceled') }} (Canceled)</option>
                                         </select>
                                     </div>
                                 </div>
-
+ 
                                 <div class="row mb-3">
                                     <div class="col-md-6">
                                         <div class="alert alert-info">
-                                            <strong>الرصيد السابق:</strong> <span class="previous-balance">0.00</span>
+                                            <strong>{{ __('messages.previous_balance') }}:</strong> <span class="previous-balance">0.00</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="alert alert-success">
-                                            <strong>الرصيد الحالي (بعد التعديل):</strong> <span class="new-balance">0.00</span>
+                                            <strong>{{ __('messages.current_balance') }}:</strong> <span class="new-balance">0.00</span>
                                         </div>
                                     </div>
                                 </div>
                     
                                 <div class="mb-3">
-                                    <label class="form-label">الملاحظات</label>
+                                    <label class="form-label">{{ __('messages.notes') }}</label>
                                     <textarea name="notes" class="form-control" rows="3">{{ old('notes', $account->notes) }}</textarea>
                                 </div>
                     
                             </form>
                                 <div class="d-flex justify-content-between">
-                                    <button type="submit" form="update-form-{{ $account->id }}" class="btn btn-primary"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                                    <button type="submit" form="update-form-{{ $account->id }}" class="btn btn-primary"><i class="fas fa-save"></i> {{ __('messages.save_changes') }}</button>
                                     
-                                    <form action="{{ route('admin.accounts.destroy', $account->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('هل أنت متأكد من الحذف؟')">
+                                    <form action="{{ route('admin.accounts.destroy', $account->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('{{ __('messages.delete_confirm') }}')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> حذف</button>
+                                        <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i> {{ __('messages.delete') }}</button>
                                     </form>
                                 </div>
                         </div>
@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
                 
-                 form.addEventListener('input', function(e) {
+                form.addEventListener('input', function(e) {
                     if (e.target.matches('.amount-input')) {
                         updateRowBalances(form);
                     }
