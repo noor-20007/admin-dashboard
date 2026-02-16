@@ -24,201 +24,273 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3f37c9;
+            --secondary: #4895ef;
+            --accent: #4cc9f0;
+            --success: #06d6a0;
+            --warning: #ffd166;
+            --danger: #ef476f;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --body-bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --border-radius: 16px;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --hover-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--dark);
         }
-        
-        /* Premium Small Box Styling */
-        .small-box {
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+
+        /* --- Creative Cards --- */
+        .card {
+            border: none;
+            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            position: relative;
+        }
+
+        .card:hover {
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-weight: 800;
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- Modern Tables --- */
+        .table-responsive {
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+
+        .table {
+            margin-bottom: 0;
+            vertical-align: middle;
+            white-space: nowrap; /* Prevent text wrapping for better density */
+        }
+
+        .table thead th {
+            background-color: #f9fafb;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 0.8rem 0.75rem; /* Reduced padding */
+        }
+
+        .table tbody td {
+            padding: 0.75rem 0.75rem; /* Reduced padding for cleaner, tighter rows */
+            color: #374151;
+            font-weight: 500;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #fcfdfe;
+        }
+
+        .table tbody tr:hover {
+            background-color: #eff6ff;
+        }
+
+        /* --- Soft Forms --- */
+        .form-control, .form-select {
+            border-radius: 12px;
+            border: 2px solid #e5e7eb;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            background-color: #f9fafb;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+            background-color: #fff;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* --- Buttons --- */
+        .btn {
+            border-radius: 10px;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(67, 97, 238, 0.5);
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #d90429);
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(239, 71, 111, 0.4);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(239, 71, 111, 0.5);
+        }
+
+        /* --- Sidebar (Creative Glassy Dark) --- */
+        .app-sidebar {
+            background: #1f2937 !important; /* Elegant Dark */
+            box-shadow: 4px 0 25px rgba(0,0,0,0.05);
+            border-right: none;
+        }
+
+        .sidebar-brand {
+            background: rgba(255,255,255,0.03) !important;
+            border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+            padding: 1.5rem !important;
+        }
+
+        .brand-text {
+            font-weight: 800 !important;
+            letter-spacing: 0.5px;
             color: #fff !important;
         }
-        
-        .small-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+
+        .sidebar-menu .nav-link {
+            border-radius: 10px !important;
+            margin: 0.25rem 0.75rem;
+            padding: 0.75rem 1rem;
+            color: #9ca3af !important;
+            font-weight: 600;
+            transition: var(--transition);
         }
 
-        .small-box .inner {
-            padding: 20px;
-            z-index: 2;
-            position: relative;
+        .sidebar-menu .nav-link:hover {
+            background: rgba(255,255,255,0.1) !important;
+            color: #fff !important;
+            transform: translateX(5px);
         }
 
-        .small-box h3 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            white-space: nowrap;
+        .sidebar-menu .nav-link.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+            color: #fff !important;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
         }
 
-        .small-box p {
+        .sidebar-menu .nav-icon {
             font-size: 1.1rem;
+            margin-left: 0.5rem; /* For RTL */
             opacity: 0.9;
         }
 
-        .small-box .icon {
-            color: rgba(0,0,0,0.15);
-            z-index: 0;
-            position: absolute;
-            right: 15px;
-            top: 10px;
-            transition: all 0.3s linear;
+        /* --- Dashboard Widgets (Small Box) --- */
+        .small-box {
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            position: relative;
+            background: #fff;
+            padding: 20px;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.03);
+            margin-bottom: 20px;
         }
 
-        .small-box .icon > i {
-            font-size: 80px;
+        .small-box:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .small-box .inner h3 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .small-box .inner p {
+            color: #6b7280;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .small-box .icon {
+            position: absolute;
+            top: 50%;
+            left: 20px; /* RTL switch */
+            transform: translateY(-50%);
+            font-size: 4rem;
+            color: rgba(67, 97, 238, 0.1);
+            transition: var(--transition);
         }
 
         .small-box:hover .icon {
-            transform: scale(1.1);
+             color: rgba(67, 97, 238, 0.2);
+             transform: translateY(-50%) scale(1.1);
         }
 
-        /* Gradient Backgrounds */
-        .bg-info {
-            background: linear-gradient(45deg, #17a2b8, #36b9cc) !important;
-        }
-        .bg-success {
-            background: linear-gradient(45deg, #28a745, #1cc88a) !important;
-        }
-        .bg-warning {
-            background: linear-gradient(45deg, #ffc107, #f6c23e) !important;
-            color: #fff !important;
-        }
-        .bg-danger {
-            background: linear-gradient(45deg, #dc3545, #e74a3b) !important;
-        }
-        .bg-primary {
-            background: linear-gradient(45deg, #007bff, #4e73df) !important;
-        }
-        .bg-purple {
-            background: linear-gradient(45deg, #6f42c1, #5a5c69) !important;
-        }
-        
-        .card {
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: none;
-        }
-        
-        .card-header {
-            background-color: transparent;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            padding: 1.2rem 1.5rem;
-        }
-        
-        /* Simple Sidebar Styling */
-        .app-sidebar {
-            background: #2c3e50 !important;
-            box-shadow: 1px 0 8px rgba(0,0,0,0.1);
-        }
-        
-        .sidebar-brand {
-            background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 20px 15px;
-        }
-        
-        .brand-link {
-            color: #fff !important;
-            text-decoration: none;
-        }
-        
-        .brand-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #fff;
-        }
-        
-        /* Hide scrollbar completely */
-        .sidebar-wrapper {
-            overflow-y: auto !important;
-            height: calc(100vh - 70px);
-        }
-        
-        .sidebar-wrapper::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .sidebar-wrapper::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.1);
-        }
-        
-        .sidebar-wrapper::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.3);
-            border-radius: 3px;
-        }
-        
-        .sidebar-wrapper::-webkit-scrollbar-thumb:hover {
-            background: rgba(255,255,255,0.5);
-        }
-        
-        /* Simple Menu Headers */
-        .sidebar-menu .nav-header {
-            background: rgba(52, 152, 219, 0.7);
-            color: white;
-            padding: 8px 15px;
-            margin: 10px 8px 5px 8px;
+        /* Badge Styling */
+        .badge {
+            padding: 0.5em 0.8em;
             border-radius: 6px;
             font-weight: 600;
-            font-size: 0.85rem;
-            text-align: center;
+            letter-spacing: 0.3px;
         }
-        
-        .sidebar-menu .nav-item {
-            margin: 2px 0;
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        
-        .sidebar-menu .nav-link {
-            border-radius: 6px;
-            margin: 0 8px;
-            transition: all 0.2s ease;
-            color: rgba(255,255,255,0.8) !important;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-        
-        .sidebar-menu .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff !important;
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
         }
-        
-        .sidebar-menu .nav-link.active {
-            background: rgba(39, 174, 96, 0.8);
-            color: #fff !important;
-        }
-        
-        .sidebar-menu .nav-icon {
-            width: 30px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-        
-        .sidebar-menu .nav-link p {
-            margin: 0;
-            font-weight: 500;
-            font-size: 0.95rem;
-        }
-        
-        /* Sub-menu items */
-        .sidebar-menu .nav-item.sub-item .nav-link {
-            background: rgba(255,255,255,0.03);
-            margin-right: 20px;
-            font-size: 0.9rem;
-        }
-        
-        .sidebar-menu .nav-item.sub-item .nav-link:hover {
-            background: rgba(255,255,255,0.08);
-        }
-        
-        .sidebar-menu .nav-item.sub-item .nav-link.active {
-            background: rgba(231, 76, 60, 0.7);
-        }
-        
-        .btn {
-            border-radius: 8px;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
     </style>
 
