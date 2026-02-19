@@ -489,6 +489,13 @@
                             </ul>
                         </li>
 
+                        <li class="nav-item">
+    <a href="{{ route('filemanager.index') }}" class="nav-link">
+        <i class="nav-icon fas fa-folder-open"></i>
+        <p>مدير الملفات</p>
+    </a>
+</li>
+
                         <!-- زيارة الموقع -->
                         <li class="nav-item">
                             <a href="{{ url('/') }}" class="nav-link" target="_blank">

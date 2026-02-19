@@ -194,6 +194,14 @@ Route::get('login', [App\Http\Controllers\AuthController::class, 'showLoginForm'
 Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
+// File Manager Route
+Route::middleware(['auth'])->group(function () {
+    Route::get('/filemanager', [App\Http\Controllers\FileManagerViewController::class, 'index'])->name('filemanager.index');
+});
+
+// Include File Manager Web Routes
+require __DIR__.'/filemanager-web.php';
+
 // Admin Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');

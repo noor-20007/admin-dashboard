@@ -31,12 +31,25 @@ app()->setLocale($currentLang);
     <link rel="stylesheet" class="alt" href="{{ asset('css/theme-default.css') }}">
     <link rel="stylesheet" href="{{ asset('css/custom_fixes.css') }}">
     <style>
-        #top-banner { width: 100%; display: block; max-height: 150px; overflow: hidden; }
-        #top-banner img { width: 100%; height: 150px; object-fit: cover; display: block; }
-        #header { position: sticky; top: 0; z-index: 999; background: #fff; }
+        /* Banner - auto height based on image */
+        #top-banner { 
+            width: 100%; 
+            display: block; 
+            overflow: hidden; 
+        }
+        #top-banner img { 
+            width: 100%; 
+            height: auto; 
+            display: block; 
+        }
         
-        /* Except top-banner which needs to be full width */
-        #top-banner img { width: 100% !important; }
+        /* Logo - circular shape without changing size */
+        .logo img {
+            border-radius: 50% !important;
+            object-fit: cover !important;
+        }
+        
+        #header { position: sticky; top: 0; z-index: 999; background: #fff; }
         
         /* Force slider main images to cover the area */
         #page-slider ul li > img {
