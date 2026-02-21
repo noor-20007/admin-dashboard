@@ -297,39 +297,573 @@
 @endsection
 
 @push('scripts')
-<!-- File Manager Script -->
-<script src="{{ asset('js/filemanager.js') }}"></script>
-
+<!-- File Manager Script - Inline -->
 <script>
-    // Pass translations to JavaScript
-    window.fileManagerTranslations = {
-        deleteConfirm: "{{ __('messages.delete_confirm') }}",
-        deleteMultipleConfirm: "{{ __('messages.delete_multiple_confirm') }}",
-        deletedSuccess: "{{ __('messages.deleted_success') }}",
-        uploadedSuccess: "{{ __('messages.uploaded_success') }}",
-        createdSuccess: "{{ __('messages.created_success') }}",
-        renamedSuccess: "{{ __('messages.renamed_success') }}",
-        copiedSuccess: "{{ __('messages.copied_success') }}",
-        movedSuccess: "{{ __('messages.moved_success') }}",
-        error: "{{ __('messages.error') }}",
-        selectItem: "{{ __('messages.select_item') }}",
-        selectItems: "{{ __('messages.select_items') }}",
-        selectOneItem: "{{ __('messages.select_one_item') }}",
-        clipboardEmpty: "{{ __('messages.clipboard_empty') }}",
-        enterName: "{{ __('messages.enter_name') }}",
-        home: "{{ __('messages.home') }}",
-        noFiles: "{{ __('messages.no_files') }}",
-        startUploading: "{{ __('messages.start_uploading') }}"
-    };
+/**
+ * File Manager JavaScript Client
+ * Handles all frontend interactions with the File Manager API
+ */
+class FileManager {
+    constructor(config) {
+        this.apiUrl = config.apiUrl;
+        this.token = config.token;
+        this.currentPath = '';
+        this.selectedItems = [];
+        this.clipboard = null;
+        
+        this.initializeEventListeners();
+    }
 
-    // Initialize File Manager
-    const fileManager = new FileManager({
-        apiUrl: '/filemanager',
-        token: '',
-        translations: window.fileManagerTranslations
-    });
+    /**
+     * Initialize event listeners
+     */
+    initializeEventListeners() {
+        // Drag and drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            this.handleFileDrop(e.dataTransfer.files);
+        });
 
-    // Load initial directory
-    fileManager.loadDirectory('');
+        // Hide context menu on click outside
+        document.addEventListener('click', () => {
+            document.getElementById('contextMenu').style.display = 'none';
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'a') {
+                    e.preventDefault();
+                    this.selectAll();
+                }
+            } else if (e.key === 'Delete') {
+                this.deleteSelected();
+            } else if (e.key === 'F2') {
+                e.preventDefault();
+                this.renameSelected();
+            }
+        });
+    }
+
+    /**
+     * Make API request
+     */
+    async apiRequest(endpoint, options = {}) {
+        const url = `${this.apiUrl}${endpoint}`;
+        const headers = {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            ...options.headers
+        };
+
+        if (!(options.body instanceof FormData)) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        try {
+            const response = await fetch(url, {
+                ...options,
+                headers,
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'حدث خطأ في الطلب');
+            }
+
+            return await response.json();
+        } catch (error) {
+            this.showError(error.message);
+            throw error;
+        }
+    }
+
+    /**
+     * Load directory contents
+     */
+    async loadDirectory(path) {
+        try {
+            this.currentPath = path;
+            const data = await this.apiRequest(`/list?path=${encodeURIComponent(path)}`);
+            
+            this.updateBreadcrumb(path);
+            this.renderFileList(data.items);
+        } catch (error) {
+            console.error('Error loading directory:', error);
+        }
+    }
+
+    /**
+     * Update breadcrumb navigation
+     */
+    updateBreadcrumb(path) {
+        const breadcrumb = document.getElementById('breadcrumb');
+        let html = `
+            <li class="breadcrumb-item">
+                <a href="#" onclick="fileManager.navigateTo(''); return false;">
+                    <i class="fas fa-home ms-1"></i> الرئيسية
+                </a>
+            </li>
+        `;
+
+        if (path) {
+            const parts = path.split('/');
+            let currentPath = '';
+            
+            parts.forEach((part, index) => {
+                currentPath += (index > 0 ? '/' : '') + part;
+                const isLast = index === parts.length - 1;
+                
+                if (isLast) {
+                    html += `<li class="breadcrumb-item active">${part}</li>`;
+                } else {
+                    html += `
+                        <li class="breadcrumb-item">
+                            <a href="#" onclick="fileManager.navigateTo('${currentPath}'); return false;">
+                                ${part}
+                            </a>
+                        </li>
+                    `;
+                }
+            });
+        }
+
+        breadcrumb.innerHTML = html;
+    }
+
+    /**
+     * Render file list
+     */
+    renderFileList(items) {
+        const fileList = document.getElementById('fileList');
+        
+        if (!items || items.length === 0) {
+            fileList.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h5>لا توجد ملفات</h5>
+                    <p class="text-muted">ابدأ برفع الملفات أو إنشاء مجلدات جديدة</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
+        items.forEach(item => {
+            const icon = item.type === 'dir' 
+                ? '<i class="fas fa-folder file-icon folder"></i>'
+                : this.getFileIcon(item.name);
+            
+            const size = item.type === 'file' ? this.formatFileSize(item.size) : '-';
+            const date = new Date(item.modified * 1000).toLocaleDateString('ar-EG');
+            
+            const itemPath = this.currentPath ? `${this.currentPath}/${item.name}` : item.name;
+
+            html += `
+                <div class="file-item" 
+                     data-path="${itemPath}" 
+                     data-type="${item.type}"
+                     onclick="fileManager.handleItemClick(event, '${itemPath}', '${item.type}')"
+                     ondblclick="fileManager.handleItemDoubleClick('${itemPath}', '${item.type}')">
+                    ${icon}
+                    <div class="file-info">
+                        <div class="file-name">${item.name}</div>
+                        <div class="file-meta">${size} • ${date}</div>
+                    </div>
+                    <div class="file-actions">
+                        ${item.type === 'file' ? `
+                            <button class="btn btn-sm btn-outline-primary btn-action" 
+                                    onclick="event.stopPropagation(); fileManager.downloadFile('${itemPath}')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-sm btn-outline-danger btn-action" 
+                                onclick="event.stopPropagation(); fileManager.deleteItem('${itemPath}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        fileList.innerHTML = html;
+    }
+
+    /**
+     * Get file icon based on extension
+     */
+    getFileIcon(filename) {
+        const ext = filename.split('.').pop().toLowerCase();
+        const iconMap = {
+            'jpg': 'fa-file-image', 'jpeg': 'fa-file-image', 'png': 'fa-file-image',
+            'pdf': 'fa-file-pdf', 'doc': 'fa-file-word', 'docx': 'fa-file-word',
+            'zip': 'fa-file-archive', 'rar': 'fa-file-archive',
+            'html': 'fa-file-code', 'css': 'fa-file-code', 'js': 'fa-file-code',
+            'mp4': 'fa-file-video', 'mp3': 'fa-file-audio',
+            'txt': 'fa-file-alt'
+        };
+        const iconClass = iconMap[ext] || 'fa-file';
+        return `<i class="fas ${iconClass} file-icon file"></i>`;
+    }
+
+    /**
+     * Format file size
+     */
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 بايت';
+        const k = 1024;
+        const sizes = ['بايت', 'كيلوبايت', 'ميجابايت', 'جيجابايت'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    /**
+     * Handle item click
+     */
+    handleItemClick(event, path, type) {
+        const item = event.currentTarget;
+        
+        if (event.ctrlKey || event.metaKey) {
+            item.classList.toggle('selected');
+            if (item.classList.contains('selected')) {
+                this.selectedItems.push({ path, type });
+            } else {
+                this.selectedItems = this.selectedItems.filter(i => i.path !== path);
+            }
+        } else {
+            document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            this.selectedItems = [{ path, type }];
+        }
+    }
+
+    /**
+     * Handle item double click
+     */
+    handleItemDoubleClick(path, type) {
+        if (type === 'dir') {
+            this.navigateTo(path);
+        } else {
+            this.viewFile(path);
+        }
+    }
+
+    /**
+     * View file in new tab
+     */
+    viewFile(path) {
+        const url = `${window.location.origin}/filemanager/view?path=${encodeURIComponent(path)}`;
+        window.open(url, '_blank');
+    }
+
+    /**
+     * Navigate to path
+     */
+    navigateTo(path) {
+        this.selectedItems = [];
+        this.loadDirectory(path);
+    }
+
+    /**
+     * Create folder
+     */
+    createFolder() {
+        const modal = new bootstrap.Modal(document.getElementById('createFolderModal'));
+        document.getElementById('folderName').value = '';
+        modal.show();
+    }
+
+    /**
+     * Confirm create folder
+     */
+    async confirmCreateFolder() {
+        const folderName = document.getElementById('folderName').value.trim();
+        
+        if (!folderName) {
+            this.showError('الرجاء إدخال اسم المجلد');
+            return;
+        }
+
+        try {
+            const path = this.currentPath ? `${this.currentPath}/${folderName}` : folderName;
+            await this.apiRequest('/create-directory', {
+                method: 'POST',
+                body: JSON.stringify({ path })
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('createFolderModal')).hide();
+            this.showSuccess('تم إنشاء المجلد بنجاح');
+            this.refresh();
+        } catch (error) {
+            console.error('Error creating folder:', error);
+        }
+    }
+
+    /**
+     * Upload file
+     */
+    uploadFile() {
+        document.getElementById('fileInput').click();
+    }
+
+    /**
+     * Handle file select
+     */
+    handleFileSelect(event) {
+        const files = event.target.files;
+        this.uploadFiles(files);
+    }
+
+    /**
+     * Handle file drop
+     */
+    handleFileDrop(files) {
+        this.uploadFiles(files);
+    }
+
+    /**
+     * Upload files
+     */
+    async uploadFiles(files) {
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+
+        progressContainer.style.display = 'block';
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            try {
+                await this.uploadSmallFile(file);
+                const progress = ((i + 1) / files.length) * 100;
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+            } catch (error) {
+                console.error('Error uploading file:', error);
+            }
+        }
+
+        progressContainer.style.display = 'none';
+        this.showSuccess('تم رفع الملفات بنجاح');
+        this.refresh();
+    }
+
+    /**
+     * Upload small file
+     */
+    async uploadSmallFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('path', this.currentPath);
+
+        await this.apiRequest('/upload', {
+            method: 'POST',
+            body: formData
+        });
+    }
+
+    /**
+     * Download file
+     */
+    downloadFile(path) {
+        const url = `${window.location.origin}/filemanager/download?path=${encodeURIComponent(path)}`;
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+        setTimeout(() => document.body.removeChild(iframe), 5000);
+    }
+
+    /**
+     * Download selected items
+     */
+    async downloadSelected() {
+        if (this.selectedItems.length === 0) {
+            this.showError('الرجاء تحديد ملف أو أكثر');
+            return;
+        }
+        this.downloadFile(this.selectedItems[0].path);
+    }
+
+    /**
+     * Delete item
+     */
+    async deleteItem(path) {
+        if (!confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
+            return;
+        }
+
+        try {
+            const response = await this.apiRequest('/delete', {
+                method: 'POST',
+                body: JSON.stringify({ path })
+            });
+
+            if (response.success) {
+                this.showSuccess('تم الحذف بنجاح');
+                setTimeout(() => this.refresh(), 500);
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            this.showError('فشل الحذف: ' + error.message);
+        }
+    }
+
+    /**
+     * Delete selected items
+     */
+    async deleteSelected() {
+        if (this.selectedItems.length === 0) {
+            this.showError('الرجاء تحديد عنصر أو أكثر');
+            return;
+        }
+
+        if (!confirm(`هل أنت متأكد من حذف ${this.selectedItems.length} عنصر؟`)) {
+            return;
+        }
+
+        for (const item of this.selectedItems) {
+            await this.deleteItem(item.path);
+        }
+        this.selectedItems = [];
+    }
+
+    /**
+     * Rename selected item
+     */
+    renameSelected() {
+        if (this.selectedItems.length !== 1) {
+            this.showError('الرجاء تحديد عنصر واحد فقط');
+            return;
+        }
+
+        const item = this.selectedItems[0];
+        const currentName = item.path.split('/').pop();
+        
+        const modal = new bootstrap.Modal(document.getElementById('renameModal'));
+        document.getElementById('newName').value = currentName;
+        modal.show();
+    }
+
+    /**
+     * Confirm rename
+     */
+    async confirmRename() {
+        const newName = document.getElementById('newName').value.trim();
+        
+        if (!newName) {
+            this.showError('الرجاء إدخال الاسم الجديد');
+            return;
+        }
+
+        const item = this.selectedItems[0];
+        const pathParts = item.path.split('/');
+        pathParts[pathParts.length - 1] = newName;
+        const newPath = pathParts.join('/');
+
+        try {
+            await this.apiRequest('/move', {
+                method: 'POST',
+                body: JSON.stringify({ from: item.path, to: newPath })
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('renameModal')).hide();
+            this.showSuccess('تم إعادة التسمية بنجاح');
+            this.refresh();
+        } catch (error) {
+            console.error('Error renaming item:', error);
+        }
+    }
+
+    /**
+     * Copy selected items
+     */
+    copySelected() {
+        if (this.selectedItems.length === 0) {
+            this.showError('الرجاء تحديد عنصر أو أكثر');
+            return;
+        }
+        this.clipboard = { action: 'copy', items: [...this.selectedItems] };
+        this.showSuccess('تم النسخ إلى الحافظة');
+    }
+
+    /**
+     * Move selected items
+     */
+    moveSelected() {
+        if (this.selectedItems.length === 0) {
+            this.showError('الرجاء تحديد عنصر أو أكثر');
+            return;
+        }
+        this.clipboard = { action: 'move', items: [...this.selectedItems] };
+        this.showSuccess('تم القص إلى الحافظة');
+    }
+
+    /**
+     * Select all items
+     */
+    selectAll() {
+        document.querySelectorAll('.file-item').forEach(item => item.classList.add('selected'));
+        this.selectedItems = Array.from(document.querySelectorAll('.file-item')).map(item => ({
+            path: item.dataset.path,
+            type: item.dataset.type
+        }));
+    }
+
+    /**
+     * Refresh current directory
+     */
+    refresh() {
+        this.selectedItems = [];
+        this.loadDirectory(this.currentPath);
+    }
+
+    /**
+     * Show success message
+     */
+    showSuccess(message) {
+        alert(message);
+    }
+
+    /**
+     * Show error message
+     */
+    showError(message) {
+        alert(message);
+    }
+}
+
+// Initialize File Manager after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        window.fileManager = new FileManager({
+            apiUrl: '/filemanager',
+            token: ''
+        });
+
+        // Load initial directory
+        fileManager.loadDirectory('').catch(error => {
+            console.error('Failed to load directory:', error);
+            alert('فشل تحميل الملفات. تحقق من Console للتفاصيل.');
+        });
+    } catch (error) {
+        console.error('Failed to initialize FileManager:', error);
+        alert('فشل تهيئة File Manager: ' + error.message);
+    }
+});
 </script>
 @endpush

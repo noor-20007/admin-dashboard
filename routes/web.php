@@ -3,6 +3,24 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
+Route::get('/clear-cache', function() {
+    try {
+        Artisan::call('config:clear');
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        
+        return "✅ تم مسح الـ Cache بنجاح!<br><br>" .
+               "Config Cache: Cleared<br>" .
+               "Application Cache: Cleared<br>" .
+               "Route Cache: Cleared<br>" .
+               "View Cache: Cleared<br><br>" .
+               "<a href='/filemanager'>اذهب إلى File Manager</a>";
+    } catch (\Exception $e) {
+        return "❌ خطأ: " . $e->getMessage();
+    }
+});
+
 Route::get('lang/{locale}', [App\Http\Controllers\LanguageController::class, 'switch'])->name('lang.switch');
 
 Route::get('/fix-storage', function () {
@@ -197,6 +215,9 @@ Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout'])->n
 // File Manager Route
 Route::middleware(['auth'])->group(function () {
     Route::get('/filemanager', [App\Http\Controllers\FileManagerViewController::class, 'index'])->name('filemanager.index');
+    Route::get('/filemanager/test', function() {
+        return view('filemanager.test');
+    })->name('filemanager.test');
 });
 
 // Include File Manager Web Routes
