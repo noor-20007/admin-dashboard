@@ -154,12 +154,16 @@
         padding: 5px 0;
         z-index: 1000;
         display: none;
+        min-width: 180px;
     }
     
     .context-menu-item {
         padding: 10px 20px;
         cursor: pointer;
         transition: background 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
     
     .context-menu-item:hover {
@@ -169,6 +173,17 @@
     .context-menu-item i {
         width: 20px;
         margin-left: 10px;
+    }
+    
+    .context-menu-item.text-danger:hover {
+        background: #fee;
+        color: #dc3545;
+    }
+    
+    .file-actions .btn-more {
+        padding: 2px 8px;
+        font-size: 18px;
+        line-height: 1;
     }
 </style>
 
@@ -242,15 +257,22 @@
     <div class="context-menu-item" onclick="fileManager.downloadSelected()">
         <i class="fas fa-download"></i> {{ __('messages.download') }}
     </div>
-    <div class="context-menu-item" onclick="fileManager.renameSelected()">
-        <i class="fas fa-edit"></i> {{ __('messages.rename') }}
-    </div>
     <div class="context-menu-item" onclick="fileManager.copySelected()">
         <i class="fas fa-copy"></i> {{ __('messages.copy') }}
     </div>
     <div class="context-menu-item" onclick="fileManager.moveSelected()">
         <i class="fas fa-arrows-alt"></i> {{ __('messages.move') }}
     </div>
+    <div class="context-menu-item" onclick="fileManager.renameSelected()">
+        <i class="fas fa-edit"></i> {{ __('messages.rename') }}
+    </div>
+    <div class="context-menu-item" onclick="fileManager.zipSelected()">
+        <i class="fas fa-file-archive"></i> ضغط (Zip)
+    </div>
+    <div class="context-menu-item" onclick="fileManager.copyLink()">
+        <i class="fas fa-link"></i> نسخ الرابط
+    </div>
+    <hr style="margin: 5px 0;">
     <div class="context-menu-item text-danger" onclick="fileManager.deleteSelected()">
         <i class="fas fa-trash"></i> {{ __('messages.delete') }}
     </div>
@@ -290,6 +312,28 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
                 <button type="button" class="btn btn-primary" onclick="fileManager.confirmRename()">{{ __('messages.save') }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Move Modal -->
+<div class="modal fade" id="moveModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">نقل إلى</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="folderList" style="max-height: 300px; overflow-y: auto;">
+                    <div class="list-group">
+                        <!-- Folders will be loaded here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('messages.cancel') }}</button>
             </div>
         </div>
     </div>
@@ -484,15 +528,9 @@ class FileManager {
                         <div class="file-meta">${size} • ${date}</div>
                     </div>
                     <div class="file-actions">
-                        ${item.type === 'file' ? `
-                            <button class="btn btn-sm btn-outline-primary btn-action" 
-                                    onclick="event.stopPropagation(); fileManager.downloadFile('${itemPath}')">
-                                <i class="fas fa-download"></i>
-                            </button>
-                        ` : ''}
-                        <button class="btn btn-sm btn-outline-danger btn-action" 
-                                onclick="event.stopPropagation(); fileManager.deleteItem('${itemPath}')">
-                            <i class="fas fa-trash"></i>
+                        <button class="btn btn-sm btn-outline-secondary btn-action btn-more" 
+                                onclick="event.stopPropagation(); fileManager.showItemMenu(event, '${itemPath}', '${item.type}')">
+                            <i class="fas fa-ellipsis-v"></i>
                         </button>
                     </div>
                 </div>
@@ -792,25 +830,159 @@ class FileManager {
     /**
      * Copy selected items
      */
-    copySelected() {
+    async copySelected() {
         if (this.selectedItems.length === 0) {
             this.showError('الرجاء تحديد عنصر أو أكثر');
             return;
         }
-        this.clipboard = { action: 'copy', items: [...this.selectedItems] };
-        this.showSuccess('تم النسخ إلى الحافظة');
+
+        try {
+            for (const item of this.selectedItems) {
+                const filename = item.path.split('/').pop();
+                const ext = filename.includes('.') ? '.' + filename.split('.').pop() : '';
+                const nameWithoutExt = filename.replace(ext, '');
+                
+                // Find next available copy number
+                let copyNumber = 1;
+                let newName = `${nameWithoutExt} (${copyNumber})${ext}`;
+                let newPath = this.currentPath ? `${this.currentPath}/${newName}` : newName;
+                
+                // Keep incrementing until we find a name that doesn't exist
+                while (true) {
+                    // Check if this file exists by trying to list current directory
+                    const data = await this.apiRequest(`/list?path=${encodeURIComponent(this.currentPath)}`);
+                    const exists = data.items.some(i => i.name === newName);
+                    
+                    if (!exists) {
+                        break; // Found available name
+                    }
+                    
+                    // Try next number
+                    copyNumber++;
+                    newName = `${nameWithoutExt} (${copyNumber})${ext}`;
+                    newPath = this.currentPath ? `${this.currentPath}/${newName}` : newName;
+                }
+
+                console.log('Copying:', { from: item.path, to: newPath });
+
+                const response = await this.apiRequest('/copy', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        from: item.path,
+                        to: newPath
+                    })
+                });
+
+                console.log('Copy response:', response);
+            }
+
+            this.showSuccess('تم النسخ بنجاح');
+            this.refresh();
+        } catch (error) {
+            console.error('Copy error:', error);
+            this.showError('فشل النسخ: ' + error.message);
+        }
     }
 
     /**
      * Move selected items
      */
-    moveSelected() {
+    async moveSelected() {
         if (this.selectedItems.length === 0) {
             this.showError('الرجاء تحديد عنصر أو أكثر');
             return;
         }
-        this.clipboard = { action: 'move', items: [...this.selectedItems] };
-        this.showSuccess('تم القص إلى الحافظة');
+
+        // Load all folders
+        await this.loadFoldersForMove();
+        
+        const modal = new bootstrap.Modal(document.getElementById('moveModal'));
+        modal.show();
+    }
+
+    /**
+     * Load folders for move operation
+     */
+    async loadFoldersForMove(path = '') {
+        try {
+            const data = await this.apiRequest(`/list?path=${encodeURIComponent(path)}`);
+            const folderList = document.querySelector('#folderList .list-group');
+            
+            let html = '';
+            
+            // Add root folder option
+            if (path === '') {
+                html += `
+                    <a href="#" class="list-group-item list-group-item-action" 
+                       onclick="fileManager.confirmMove(''); return false;">
+                        <i class="fas fa-home ms-2"></i> المجلد الرئيسي
+                    </a>
+                `;
+            } else {
+                // Add back button
+                const parentPath = path.split('/').slice(0, -1).join('/');
+                html += `
+                    <a href="#" class="list-group-item list-group-item-action" 
+                       onclick="fileManager.loadFoldersForMove('${parentPath}'); return false;">
+                        <i class="fas fa-arrow-right ms-2"></i> رجوع
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action" 
+                       onclick="fileManager.confirmMove('${path}'); return false;">
+                        <i class="fas fa-check ms-2"></i> نقل إلى هنا
+                    </a>
+                `;
+            }
+            
+            // Add folders
+            const folders = data.items.filter(item => item.type === 'dir');
+            folders.forEach(folder => {
+                const folderPath = path ? `${path}/${folder.name}` : folder.name;
+                html += `
+                    <a href="#" class="list-group-item list-group-item-action" 
+                       onclick="fileManager.loadFoldersForMove('${folderPath}'); return false;">
+                        <i class="fas fa-folder ms-2"></i> ${folder.name}
+                    </a>
+                `;
+            });
+            
+            if (folders.length === 0 && path !== '') {
+                html += `
+                    <div class="list-group-item text-muted">
+                        لا توجد مجلدات فرعية
+                    </div>
+                `;
+            }
+            
+            folderList.innerHTML = html;
+        } catch (error) {
+            console.error('Error loading folders:', error);
+        }
+    }
+
+    /**
+     * Confirm move to selected folder
+     */
+    async confirmMove(targetPath) {
+        for (const item of this.selectedItems) {
+            const filename = item.path.split('/').pop();
+            const newPath = targetPath ? `${targetPath}/${filename}` : filename;
+
+            try {
+                await this.apiRequest('/move', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        from: item.path,
+                        to: newPath
+                    })
+                });
+            } catch (error) {
+                console.error('Error moving item:', error);
+            }
+        }
+
+        bootstrap.Modal.getInstance(document.getElementById('moveModal')).hide();
+        this.showSuccess('تم النقل بنجاح');
+        this.refresh();
     }
 
     /**
@@ -844,6 +1016,149 @@ class FileManager {
      */
     showError(message) {
         alert(message);
+    }
+
+    /**
+     * Show item menu (three dots)
+     */
+    showItemMenu(event, path, type) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const menu = document.getElementById('contextMenu');
+        menu.style.display = 'block';
+        
+        // Get button position
+        const button = event.target.closest('button');
+        const rect = button.getBoundingClientRect();
+        
+        // Calculate position
+        const menuHeight = 280;
+        const menuWidth = 180;
+        
+        let left = rect.left;
+        let top = rect.bottom + 5; // 5px below button
+        
+        // Check if menu goes beyond bottom of viewport
+        if (top + menuHeight > window.innerHeight) {
+            top = rect.top - menuHeight - 5; // Show above button
+        }
+        
+        // Check if menu goes beyond right edge
+        if (left + menuWidth > window.innerWidth) {
+            left = rect.right - menuWidth;
+        }
+        
+        menu.style.left = left + 'px';
+        menu.style.top = top + 'px';
+        menu.style.position = 'fixed'; // Use fixed instead of absolute
+        
+        // Select this item
+        document.querySelectorAll('.file-item').forEach(el => el.classList.remove('selected'));
+        button.closest('.file-item').classList.add('selected');
+        this.selectedItems = [{ path, type }];
+    }
+
+    /**
+     * Zip selected items
+     */
+    async zipSelected() {
+        if (this.selectedItems.length === 0) {
+            this.showError('الرجاء تحديد ملف أو أكثر');
+            return;
+        }
+
+        // Get default name from first selected item
+        let defaultName = 'archive';
+        if (this.selectedItems.length === 1) {
+            const filename = this.selectedItems[0].path.split('/').pop();
+            defaultName = filename.includes('.') ? filename.split('.').slice(0, -1).join('.') : filename;
+        }
+
+        let zipName = prompt('اسم ملف الـ ZIP:', defaultName);
+        if (!zipName) return;
+
+        // Clean the filename - remove any path traversal characters and .zip extension
+        zipName = zipName.replace(/\.\./g, '').replace(/[\/\\]/g, '').replace(/\.zip$/i, '');
+        
+        // Add .zip extension
+        zipName = zipName + '.zip';
+
+        try {
+            const paths = this.selectedItems.map(item => item.path);
+            
+            this.showSuccess('جاري إنشاء ملف ZIP...');
+            
+            // Create ZIP using batch download endpoint
+            const response = await fetch(`${this.apiUrl}/download/batch`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    paths: paths,
+                    archiveName: zipName
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message || 'فشل إنشاء ملف ZIP');
+            }
+
+            // Get blob
+            const blob = await response.blob();
+            
+            // Upload the ZIP file back to current directory
+            const formData = new FormData();
+            formData.append('file', blob, zipName);
+            formData.append('path', this.currentPath);
+
+            await this.apiRequest('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            this.showSuccess('تم إنشاء ملف ZIP بنجاح');
+            this.refresh();
+        } catch (error) {
+            console.error('Error creating zip:', error);
+            this.showError('فشل إنشاء ملف ZIP: ' + error.message);
+        }
+    }
+
+    /**
+     * Copy link to clipboard
+     */
+    async copyLink() {
+        if (this.selectedItems.length !== 1) {
+            this.showError('الرجاء تحديد ملف واحد فقط');
+            return;
+        }
+
+        const item = this.selectedItems[0];
+        if (item.type === 'dir') {
+            this.showError('لا يمكن نسخ رابط مجلد');
+            return;
+        }
+
+        const url = `${window.location.origin}/filemanager/view?path=${encodeURIComponent(item.path)}`;
+        
+        try {
+            await navigator.clipboard.writeText(url);
+            this.showSuccess('تم نسخ الرابط');
+        } catch (error) {
+            // Fallback for older browsers
+            const textarea = document.createElement('textarea');
+            textarea.value = url;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            this.showSuccess('تم نسخ الرابط');
+        }
     }
 }
 
